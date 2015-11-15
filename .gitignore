@@ -1,0 +1,8 @@
+.metadata
+.classpath
+.settings
+.project
+**/target/
+styles.css
+gwt-unitCache
+**/widgetsets/
