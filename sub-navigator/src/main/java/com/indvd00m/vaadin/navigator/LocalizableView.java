@@ -11,7 +11,7 @@ import com.vaadin.ui.VerticalLayout;
  *
  */
 @SuppressWarnings("serial")
-public abstract class LocalizableVL extends VerticalLayout implements LocaleChangedListener {
+public abstract class LocalizableView extends VerticalLayout implements LocaleChangedListener {
 
 	protected ViewState viewState = ViewState.Created;
 

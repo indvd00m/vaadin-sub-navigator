@@ -17,16 +17,15 @@ import com.vaadin.navigator.ViewProvider;
  *
  */
 @SuppressWarnings("serial")
-public abstract class LocalizableNavigatableContainer extends LocalizableNavigatableView
-		implements ViewDisplay, ViewProvider {
+public abstract class SubContainer extends SubView implements ViewDisplay, ViewProvider {
 
-	private Map<String, LocalizableNavigatableView> views = new LinkedHashMap<String, LocalizableNavigatableView>();
+	private Map<String, SubView> views = new LinkedHashMap<String, SubView>();
 
-	protected abstract LocalizableNavigatableView getSelectedView();
+	protected abstract SubView getSelectedView();
 
-	protected abstract void setSelectedView(LocalizableNavigatableView view);
+	protected abstract void setSelectedView(SubView view);
 
-	protected Map<String, LocalizableNavigatableView> getViews() {
+	protected Map<String, SubView> getViews() {
 		return views;
 	}
 
@@ -45,7 +44,7 @@ public abstract class LocalizableNavigatableContainer extends LocalizableNavigat
 		Navigator navigator = getNavigator();
 		String state = navigator.getState();
 		String path = getPath(this);
-		Map<String, LocalizableNavigatableView> viewsByState = getViews();
+		Map<String, SubView> viewsByState = getViews();
 		if (viewsByState.isEmpty() && equalsPath(state, path))
 			return;
 		if (isSubPath(path, state)) {
@@ -72,7 +71,7 @@ public abstract class LocalizableNavigatableContainer extends LocalizableNavigat
 	 */
 	public void selectedViewChangeDirected() {
 		Navigator navigator = getNavigator();
-		LocalizableNavigatableView selectedView = getSelectedView();
+		SubView selectedView = getSelectedView();
 		String path = getPath(selectedView);
 		String state = navigator.getState();
 		if (!equalsPath(state, path)) {
@@ -81,7 +80,7 @@ public abstract class LocalizableNavigatableContainer extends LocalizableNavigat
 		}
 	}
 
-	public void addView(LocalizableNavigatableView view) {
+	public void addView(SubView view) {
 		view.setViewContainer(this);
 		Navigator navigator = getNavigator();
 		String viewPath = getPath(view);
@@ -89,7 +88,7 @@ public abstract class LocalizableNavigatableContainer extends LocalizableNavigat
 		getViews().put(viewPath, view);
 	}
 
-	String getPath(LocalizableNavigatableView view) {
+	String getPath(SubView view) {
 		String thisViewName = getViewName();
 		if (viewContainer != null) {
 			thisViewName = viewContainer.getPath(this);
@@ -108,14 +107,14 @@ public abstract class LocalizableNavigatableContainer extends LocalizableNavigat
 		} else {
 			Navigator navigator = getNavigator();
 			String state = navigator.getState();
-			Map<String, LocalizableNavigatableView> viewsByState = getViews();
+			Map<String, SubView> viewsByState = getViews();
 
 			if (viewsByState.values().contains(view)) {
-				LocalizableNavigatableView lnView = (LocalizableNavigatableView) view;
-				List<LocalizableNavigatableView> pathElements = lnView.getFullPathElements();
-				for (LocalizableNavigatableView pathElement : pathElements) {
+				SubView lnView = (SubView) view;
+				List<SubView> pathElements = lnView.getFullPathElements();
+				for (SubView pathElement : pathElements) {
 					if (!pathElement.isSelected()) {
-						LocalizableNavigatableContainer container = pathElement.getViewContainer();
+						SubContainer container = pathElement.getViewContainer();
 						if (container != null)
 							container.setSelectedView(pathElement);
 					}
@@ -123,8 +122,8 @@ public abstract class LocalizableNavigatableContainer extends LocalizableNavigat
 			} else {
 				String path = getFullPath();
 				if (isSubPath(state, path)) {
-					for (Entry<String, LocalizableNavigatableView> e : viewsByState.entrySet()) {
-						LocalizableNavigatableView lnView = e.getValue();
+					for (Entry<String, SubView> e : viewsByState.entrySet()) {
+						SubView lnView = e.getValue();
 						if (lnView instanceof ViewDisplay) {
 							((ViewDisplay) lnView).showView(view);
 						}
@@ -148,15 +147,15 @@ public abstract class LocalizableNavigatableContainer extends LocalizableNavigat
 
 	@Override
 	public View getView(String navigationState) {
-		for (Entry<String, LocalizableNavigatableView> e : getViews().entrySet()) {
+		for (Entry<String, SubView> e : getViews().entrySet()) {
 			String path = e.getKey();
-			LocalizableNavigatableView view = e.getValue();
+			SubView view = e.getValue();
 			if (equalsPath(navigationState, path)) {
 				return view;
 			}
 			if (isSubPath(navigationState, path)) {
-				if (view instanceof LocalizableNavigatableContainer) {
-					LocalizableNavigatableContainer container = (LocalizableNavigatableContainer) view;
+				if (view instanceof SubContainer) {
+					SubContainer container = (SubContainer) view;
 					return container.getView(navigationState);
 				}
 				return view;

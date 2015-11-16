@@ -2,8 +2,8 @@ package com.indvd00m.vaadin.demo;
 
 import com.github.peholmst.i18n4vaadin.annotations.Message;
 import com.github.peholmst.i18n4vaadin.annotations.Messages;
-import com.indvd00m.vaadin.navigator.LocalizableNavigatableDynamicContainer;
-import com.indvd00m.vaadin.navigator.LocalizableNavigatableView;
+import com.indvd00m.vaadin.navigator.DynamicSubContainer;
+import com.indvd00m.vaadin.navigator.SubView;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
@@ -17,7 +17,7 @@ import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 
 @SuppressWarnings("serial")
-public class Level2DynamicContainer1 extends LocalizableNavigatableDynamicContainer {
+public class Level2DynamicContainer1 extends DynamicSubContainer {
 
 	SimpleView selectedView;
 	boolean autoRemove = false;
@@ -29,18 +29,18 @@ public class Level2DynamicContainer1 extends LocalizableNavigatableDynamicContai
 	Level2DynamicContainer1Bundle l10n = new Level2DynamicContainer1Bundle();
 
 	@Override
-	protected LocalizableNavigatableView createView(String viewName) {
+	protected SubView createView(String viewName) {
 		SimpleView view = new SimpleView(viewName);
 		return view;
 	}
 
 	@Override
-	protected LocalizableNavigatableView getSelectedView() {
+	protected SubView getSelectedView() {
 		return selectedView;
 	}
 
 	@Override
-	protected void setSelectedView(LocalizableNavigatableView view) {
+	protected void setSelectedView(SubView view) {
 		if (selectedView != view) {
 			if (selectedView != null) {
 				autoRemove = true;

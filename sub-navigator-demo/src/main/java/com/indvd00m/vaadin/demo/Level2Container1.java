@@ -2,8 +2,8 @@ package com.indvd00m.vaadin.demo;
 
 import com.github.peholmst.i18n4vaadin.annotations.Message;
 import com.github.peholmst.i18n4vaadin.annotations.Messages;
-import com.indvd00m.vaadin.navigator.LocalizableNavigatableTabContainer;
-import com.indvd00m.vaadin.navigator.LocalizableNavigatableView;
+import com.indvd00m.vaadin.navigator.SubView;
+import com.indvd00m.vaadin.navigator.TabSubContainer;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Component;
@@ -16,7 +16,7 @@ import com.vaadin.ui.TabSheet.Tab;
  *
  */
 @SuppressWarnings("serial")
-public class Level2Container1 extends LocalizableNavigatableTabContainer {
+public class Level2Container1 extends TabSubContainer {
 
 	protected Accordion accord;
 	Level2Container1Bundle l10n = new Level2Container1Bundle();
@@ -68,9 +68,9 @@ public class Level2Container1 extends LocalizableNavigatableTabContainer {
 			if (tab == null)
 				continue;
 			Component component = tab.getComponent();
-			if (!(component instanceof LocalizableNavigatableView))
+			if (!(component instanceof SubView))
 				continue;
-			LocalizableNavigatableView view = (LocalizableNavigatableView) component;
+			SubView view = (SubView) component;
 			tab.setCaption(l10n.getMessage(view.getViewName()));
 		}
 	}

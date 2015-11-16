@@ -2,8 +2,8 @@ package com.indvd00m.vaadin.demo;
 
 import com.github.peholmst.i18n4vaadin.annotations.Message;
 import com.github.peholmst.i18n4vaadin.annotations.Messages;
-import com.indvd00m.vaadin.navigator.LocalizableNavigatableContainer;
-import com.indvd00m.vaadin.navigator.LocalizableNavigatableView;
+import com.indvd00m.vaadin.navigator.SubContainer;
+import com.indvd00m.vaadin.navigator.SubView;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -15,7 +15,7 @@ import com.vaadin.ui.VerticalLayout;
  *
  */
 @SuppressWarnings("serial")
-public class AnotherContainer extends LocalizableNavigatableContainer {
+public class AnotherContainer extends SubContainer {
 
 	String containerName = "test-containers";
 
@@ -32,14 +32,14 @@ public class AnotherContainer extends LocalizableNavigatableContainer {
 	}
 
 	@Override
-	protected LocalizableNavigatableView getSelectedView() {
+	protected SubView getSelectedView() {
 		if (container.getComponentCount() == 0)
 			return null;
-		return (LocalizableNavigatableView) container.getComponent(0);
+		return (SubView) container.getComponent(0);
 	}
 
 	@Override
-	protected void setSelectedView(LocalizableNavigatableView view) {
+	protected void setSelectedView(SubView view) {
 		container.removeAllComponents();
 		container.addComponent(view);
 	}

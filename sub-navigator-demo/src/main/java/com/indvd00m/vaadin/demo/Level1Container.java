@@ -2,7 +2,7 @@ package com.indvd00m.vaadin.demo;
 
 import com.github.peholmst.i18n4vaadin.annotations.Message;
 import com.github.peholmst.i18n4vaadin.annotations.Messages;
-import com.indvd00m.vaadin.navigator.LocalizableNavigatableTabContainer;
+import com.indvd00m.vaadin.navigator.TabSubContainer;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TabSheet;
@@ -14,7 +14,7 @@ import com.vaadin.ui.TabSheet.Tab;
  *
  */
 @SuppressWarnings("serial")
-public class Level1Container extends LocalizableNavigatableTabContainer {
+public class Level1Container extends TabSubContainer {
 
 	TabSheet ts;
 	Level1ContainerBundle l10n = new Level1ContainerBundle();

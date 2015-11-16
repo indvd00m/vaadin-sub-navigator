@@ -2,7 +2,7 @@ package com.indvd00m.vaadin.demo;
 
 import com.github.peholmst.i18n4vaadin.annotations.Message;
 import com.github.peholmst.i18n4vaadin.annotations.Messages;
-import com.indvd00m.vaadin.navigator.LocalizableNavigatableView;
+import com.indvd00m.vaadin.navigator.SubView;
 import com.vaadin.ui.Label;
 
 /**
@@ -11,7 +11,7 @@ import com.vaadin.ui.Label;
  *
  */
 @SuppressWarnings("serial")
-public class SimpleView extends LocalizableNavigatableView {
+public class SimpleView extends SubView {
 
 	String viewName;
 	SimpleViewBundle l10n = new SimpleViewBundle();
@@ -34,7 +34,7 @@ public class SimpleView extends LocalizableNavigatableView {
 	protected void build() {
 		setSpacing(true);
 		setMargin(true);
-		
+
 		addComponent(new Label(viewName));
 	}
 

@@ -12,8 +12,7 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
  *
  */
 @SuppressWarnings("serial")
-public abstract class LocalizableNavigatableTabContainer extends LocalizableNavigatableContainer
-		implements SelectedTabChangeListener {
+public abstract class TabSubContainer extends SubContainer implements SelectedTabChangeListener {
 
 	abstract public TabSheet getTabSheet();
 
@@ -29,18 +28,18 @@ public abstract class LocalizableNavigatableTabContainer extends LocalizableNavi
 		selectedViewChangeDirected();
 	}
 
-	protected void addView(LocalizableNavigatableView view, Resource icon) {
+	protected void addView(SubView view, Resource icon) {
 		addView(view);
 		getTabSheet().addTab(view, "", icon);
 	}
 
 	@Override
-	protected LocalizableNavigatableView getSelectedView() {
-		return (LocalizableNavigatableView) getTabSheet().getSelectedTab();
+	protected SubView getSelectedView() {
+		return (SubView) getTabSheet().getSelectedTab();
 	}
 
 	@Override
-	protected void setSelectedView(LocalizableNavigatableView view) {
+	protected void setSelectedView(SubView view) {
 		getTabSheet().setSelectedTab(view);
 	}
 

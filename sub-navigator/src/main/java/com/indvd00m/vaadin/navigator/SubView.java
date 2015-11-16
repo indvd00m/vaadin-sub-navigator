@@ -15,9 +15,9 @@ import com.vaadin.ui.UI;
  *
  */
 @SuppressWarnings("serial")
-public abstract class LocalizableNavigatableView extends LocalizableVL implements View {
+public abstract class SubView extends LocalizableView implements View {
 
-	LocalizableNavigatableContainer viewContainer;
+	SubContainer viewContainer;
 
 	protected abstract void clean();
 
@@ -29,10 +29,10 @@ public abstract class LocalizableNavigatableView extends LocalizableVL implement
 		return viewContainer.getPath(this);
 	}
 
-	public List<LocalizableNavigatableView> getFullPathElements() {
-		List<LocalizableNavigatableView> path = new ArrayList<LocalizableNavigatableView>();
+	public List<SubView> getFullPathElements() {
+		List<SubView> path = new ArrayList<SubView>();
 		path.add(this);
-		LocalizableNavigatableContainer parent = getViewContainer();
+		SubContainer parent = getViewContainer();
 		while (parent != null) {
 			path.add(parent);
 			parent = parent.getViewContainer();
@@ -44,15 +44,15 @@ public abstract class LocalizableNavigatableView extends LocalizableVL implement
 	public boolean isSelected() {
 		if (viewContainer == null)
 			return true;
-		List<LocalizableNavigatableView> pathElements = getFullPathElements();
+		List<SubView> pathElements = getFullPathElements();
 		for (int i = 0; i < pathElements.size(); i++) {
-			LocalizableNavigatableView pathElement = pathElements.get(i);
-			LocalizableNavigatableView nextElement = null;
+			SubView pathElement = pathElements.get(i);
+			SubView nextElement = null;
 			if (i + 1 < pathElements.size())
 				nextElement = pathElements.get(i + 1);
 			if (nextElement != null) {
-				if (pathElement instanceof LocalizableNavigatableContainer) {
-					LocalizableNavigatableContainer container = (LocalizableNavigatableContainer) pathElement;
+				if (pathElement instanceof SubContainer) {
+					SubContainer container = (SubContainer) pathElement;
 					if (container.getSelectedView() != nextElement) {
 						return false;
 					}
@@ -83,16 +83,16 @@ public abstract class LocalizableNavigatableView extends LocalizableVL implement
 		viewState = ViewState.Localized;
 	}
 
-	public LocalizableNavigatableContainer getViewContainer() {
+	public SubContainer getViewContainer() {
 		return viewContainer;
 	}
 
-	public void setViewContainer(LocalizableNavigatableContainer viewContainer) {
+	public void setViewContainer(SubContainer viewContainer) {
 		this.viewContainer = viewContainer;
 	}
 
 	protected Navigator getNavigator() {
-		LocalizableNavigatableView view = this;
+		SubView view = this;
 		UI ui = getUI();
 		while (ui == null && view != null) {
 			view = view.getViewContainer();

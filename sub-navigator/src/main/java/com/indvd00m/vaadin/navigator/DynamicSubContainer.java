@@ -12,13 +12,13 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
  *
  */
 @SuppressWarnings("serial")
-public abstract class LocalizableNavigatableDynamicContainer extends LocalizableNavigatableContainer {
+public abstract class DynamicSubContainer extends SubContainer {
 
-	Map<String, LocalizableNavigatableView> views = new HashMap<String, LocalizableNavigatableView>();
+	Map<String, SubView> views = new HashMap<String, SubView>();
 
-	protected abstract LocalizableNavigatableView createView(String viewName);
+	protected abstract SubView createView(String viewName);
 
-	protected Map<String, LocalizableNavigatableView> getViews() {
+	protected Map<String, SubView> getViews() {
 		return views;
 	}
 
@@ -28,7 +28,7 @@ public abstract class LocalizableNavigatableDynamicContainer extends Localizable
 		super.enter(event);
 	}
 
-	public void addView(LocalizableNavigatableView view) {
+	public void addView(SubView view) {
 		views.clear();
 		view.setViewContainer(this);
 		views.put(view.getFullPath(), view);
@@ -53,7 +53,7 @@ public abstract class LocalizableNavigatableDynamicContainer extends Localizable
 				return this;
 			String subPath = trimDivider(state.replaceFirst("\\Q" + path + "\\E", ""));
 			String viewName = subPath.replaceAll("/+.*", "");
-			LocalizableNavigatableView subView = createView(viewName);
+			SubView subView = createView(viewName);
 			if (subView == null)
 				return null;
 			addView(subView);
