@@ -1,6 +1,6 @@
-# MyComponent Add-on for Vaadin 7
+# SubNavigator Add-on for Vaadin 7
 
-MyComponent is an UI component add-on for Vaadin 7.
+SubNavigator is an UI component add-on for Vaadin 7.
 
 ## Online demo
 
@@ -12,7 +12,7 @@ Official releases of this add-on are available at Vaadin Directory. For Maven in
 
 ## Building and running demo
 
-git clone <url of the MyComponent repository>
+git clone <url of the SubNavigator repository>
 mvn clean install
 cd demo
 mvn jetty:run
@@ -79,7 +79,7 @@ Contributions are welcome, but there are no guarantees that they are accepted as
 
 Add-on is distributed under Apache License 2.0. For license terms, see LICENSE.txt.
 
-MyComponent is written by <...>
+SubNavigator is written by <...>
 
 # Developer Guide
 
@@ -107,4 +107,4 @@ For a more comprehensive example, see src/test/java/org/vaadin/template/demo/Dem
 
 ## API
 
-MyComponent JavaDoc is available online at <...>
+SubNavigator JavaDoc is available online at <...>

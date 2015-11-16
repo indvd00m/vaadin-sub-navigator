@@ -2,7 +2,9 @@
 .classpath
 .settings
 .project
+.factorypath
 **/target/
 styles.css
 gwt-unitCache
 **/widgetsets/
+rebel.xml
