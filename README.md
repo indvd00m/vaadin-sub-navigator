@@ -1,22 +1,35 @@
 # SubNavigator Add-on for Vaadin 7
 
-SubNavigator is an UI component add-on for Vaadin 7.
+SubNavigator is a server side add-on for Vaadin 7.
 
-## Online demo
+## Using
+Add maven repository to your POM:
 
-Try the add-on demo at <url of the online demo>
+	<repository>
+		<id>indvd00m-github-repo</id>
+		<url>https://github.com/indvd00m/maven-repo/raw/master/repository</url>
+	</repository>
+
+Add dependency to your project:
+
+	<dependency>
+		<groupId>com.indvd00m.vaadin</groupId>
+		<artifactId>sub-navigator</artifactId>
+		<version>0.8.0</version>
+	</dependency>
 
 ## Download release
 
-Official releases of this add-on are available at Vaadin Directory. For Maven instructions, download and reviews, go to http://vaadin.com/addon/sub-navigator
+https://github.com/indvd00m/vaadin-sub-navigator/releases
 
 ## Building and running demo
-
-git clone <url of the SubNavigator repository>
+```
+git clone https://github.com/indvd00m/vaadin-sub-navigator/
+cd vaadin-sub-navigator
 mvn clean install
-cd demo
+cd sub-navigator-demo
 mvn jetty:run
-
+```
 To see the demo, navigate to http://localhost:8080/
 
 ## Development with Eclipse IDE
@@ -32,7 +45,7 @@ For further development of this add-on, the following tool-chain is recommended:
 
 Choose File > Import... > Existing Maven Projects
 
-Note that Eclipse may give "Plugin execution not covered by lifecycle configuration" errors for pom.xml. Use "Permanently mark goal resources in pom.xml as ignored in Eclipse build" quick-fix to mark these errors as permanently ignored in your project. Do not worry, the project still works fine. 
+Note that Eclipse may give "Plugin execution not covered by lifecycle configuration" errors for pom.xml. Use "Permanently mark goal resources in pom.xml as ignored in Eclipse build" quick-fix to mark these errors as permanently ignored in your project. Do not worry, the project still works fine.
 
 ### Debugging server-side
 
@@ -42,18 +55,11 @@ If you have a JRebel license, it makes on the fly code changes faster. Just add 
 
 To debug project and make code modifications on the fly in the server-side, right-click the sub-navigator-demo project and choose Debug As > Debug on Server. Navigate to http://localhost:8080/sub-navigator-demo/ to see the application.
 
-### Debugging client-side
-
-The most common way of debugging and making changes to the client-side code is dev-mode. To create debug configuration for it, open sub-navigator-demo project properties and click "Create Development Mode Launch" button on the Vaadin tab. Right-click newly added "GWT development mode for sub-navigator-demo.launch" and choose Debug As > Debug Configurations... Open up Classpath tab for the development mode configuration and choose User Entries. Click Advanced... and select Add Folders. Choose Java and Resources under sub-navigator/src/main and click ok. Now you are ready to start debugging the client-side code by clicking debug. Click Launch Default Browser button in the GWT Development Mode in the launched application. Now you can modify and breakpoints to client-side classes and see changes by reloading the web page. 
-
-Another way of debugging client-side is superdev mode. To enable it, uncomment devModeRedirectEnabled line from the end of DemoWidgetSet.gwt.xml located under sub-navigator-demo resources folder and compile the widgetset once by running vaadin:compile Maven target for sub-navigator-demo. Refresh sub-navigator-demo project resources by right clicking the project and choosing Refresh. Click "Create SuperDevMode Launch" button on the Vaadin tab of the sub-navigator-demo project properties panel to create superder mode code server launch configuration and modify the class path as instructed above. After starting the code server by running SuperDevMode launch as Java application, you can navigate to http://localhost:8080/sub-navigator-demo/?superdevmode. Now all code changes you do to your client side will get compiled as soon as you reload the web page. You can also access Java-sources and set breakpoints inside Chrome if you enable source maps from inspector settings. 
-
  
 ## Release notes
 
-### Version 0.8.0-SNAPSHOT
-- ...
-- ...
+### Version 0.8.0
+- First beta version
 
 ## Roadmap
 
@@ -79,32 +85,4 @@ Contributions are welcome, but there are no guarantees that they are accepted as
 
 Add-on is distributed under Apache License 2.0. For license terms, see LICENSE.txt.
 
-SubNavigator is written by <...>
-
-# Developer Guide
-
-## Getting started
-
-Here is a simple example on how to try out the add-on component:
-
-<...>
-
-For a more comprehensive example, see src/test/java/org/vaadin/template/demo/DemoUI.java
-
-## Features
-
-### Feature A
-
-<...>
-
-### Feature B
-
-<...>
-
-### Feature C
-
-<...>
-
-## API
-
-SubNavigator JavaDoc is available online at <...>
+SubNavigator is written by David E. Veliev
