@@ -2,8 +2,6 @@ package com.indvd00m.vaadin.demo;
 
 import java.text.SimpleDateFormat;
 
-import com.github.peholmst.i18n4vaadin.annotations.Message;
-import com.github.peholmst.i18n4vaadin.annotations.Messages;
 import com.indvd00m.vaadin.demo.loggable.LTabSubContainer;
 import com.indvd00m.vaadin.navigator.SubView;
 import com.indvd00m.vaadin.navigator.event.SubViewStateChangeEvent;
@@ -15,13 +13,11 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TabSheet.Tab;
 
 /**
  * @author indvd00m (gotoindvdum[at]gmail[dot]com)
@@ -35,7 +31,6 @@ public class Level1Container extends LTabSubContainer implements SubViewStateCha
 	Label logLabel;
 	Panel logPanel;
 	TabSheet ts;
-	Level1ContainerBundle l10n = new Level1ContainerBundle();
 
 	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 	int stateCount = 0;
@@ -83,6 +78,7 @@ public class Level1Container extends LTabSubContainer implements SubViewStateCha
 		hl.setComponentAlignment(clearLog, Alignment.MIDDLE_CENTER);
 
 		ts = new TabSheet();
+		ts.setCaption("Level 1 container");
 		ts.setImmediate(true);
 		ts.setSizeFull();
 		addComponent(ts);
@@ -97,29 +93,9 @@ public class Level1Container extends LTabSubContainer implements SubViewStateCha
 		setExpandRatio(logPanel, 1f);
 		logPanel.setScrollTop(Integer.MAX_VALUE);
 
-		addView(new Level2Container1(), FontAwesome.LEVEL_UP);
-		addView(new Level2DynamicContainer1(), FontAwesome.LEVEL_DOWN);
-		addView(new Level2DynamicContainer2(), FontAwesome.ALIGN_LEFT);
-	}
-
-	@Messages({
-			@Message(key = "Level1Container", value = "Level 1 container"),
-			@Message(key = "Level2Container1", value = "Level 2 container 1"),
-			@Message(key = "Level2DynamicContainer1", value = "Level 2 dynamic container 1"),
-			@Message(key = "Level2DynamicContainer2", value = "Level 2 dynamic container 2"),
-	})
-	@Override
-	protected void localize() {
-		ts.setCaption(l10n.Level1Container());
-		for (int i = 0; i < ts.getComponentCount(); i++) {
-			Tab tab = ts.getTab(i);
-			if (tab == null)
-				continue;
-			Component component = tab.getComponent();
-			if (component == null)
-				continue;
-			tab.setCaption(l10n.getMessage(component.getClass().getSimpleName()));
-		}
+		addView(new Level2Container1(), "Level 2 container 1", FontAwesome.LEVEL_UP);
+		addView(new Level2DynamicContainer1(), "Level 2 dynamic container 1", FontAwesome.LEVEL_DOWN);
+		addView(new Level2DynamicContainer2(), "Level 2 dynamic container 2", FontAwesome.ALIGN_LEFT);
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package com.indvd00m.vaadin.demo;
 
-import com.github.peholmst.i18n4vaadin.annotations.Message;
-import com.github.peholmst.i18n4vaadin.annotations.Messages;
 import com.indvd00m.vaadin.navigator.SubView;
 import com.vaadin.ui.Label;
 
@@ -14,10 +12,16 @@ import com.vaadin.ui.Label;
 public class SimpleView extends SubView {
 
 	String viewName;
-	SimpleViewBundle l10n = new SimpleViewBundle();
+	String label;
 
 	public SimpleView(String viewName) {
 		this.viewName = viewName;
+		this.label = viewName;
+	}
+
+	public SimpleView(String viewName, String label) {
+		this.viewName = viewName;
+		this.label = label;
 	}
 
 	@Override
@@ -35,19 +39,7 @@ public class SimpleView extends SubView {
 		setSpacing(true);
 		setMargin(true);
 
-		addComponent(new Label(viewName));
-	}
-
-	@Messages({
-			@Message(key = "view1", value = "View 1"),
-			@Message(key = "view2", value = "View 2"),
-			@Message(key = "view3", value = "View 3"),
-			@Message(key = "view4", value = "View 4"),
-			@Message(key = "view5", value = "View 5"),
-	})
-	@Override
-	protected void localize() {
-		((Label) getComponent(0)).setValue(l10n.getMessage(viewName));
+		addComponent(new Label(label));
 	}
 
 }

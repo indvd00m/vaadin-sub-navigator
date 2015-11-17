@@ -64,10 +64,6 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
-		<repository>
-			<id>peholmst-github-releases</id>
-			<url>https://github.com/peholmst/maven-repo/raw/master/releases</url>
-		</repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -88,11 +84,6 @@
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-server</artifactId>
 			<version>${vaadin.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.peholmst.i18n4vaadin</groupId>
-			<artifactId>i18n4vaadin-simple</artifactId>
-			<version>2.0.0</version>
 		</dependency>
 		
 		<!-- This can be replaced with TestNG or some other test framework supported by the surefire plugin -->

@@ -9,7 +9,6 @@ public enum ViewState {
 	Created,
 	Attached,
 	Builded,
-	Localized,
 	Cleaned,
 	Detached,
 }

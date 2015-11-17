@@ -1,7 +1,5 @@
 package com.indvd00m.vaadin.demo;
 
-import com.github.peholmst.i18n4vaadin.annotations.Message;
-import com.github.peholmst.i18n4vaadin.annotations.Messages;
 import com.indvd00m.vaadin.demo.loggable.LDynamicSubContainer;
 import com.indvd00m.vaadin.navigator.SubView;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -30,8 +28,6 @@ public class Level2DynamicContainer2 extends LDynamicSubContainer {
 	Label info;
 	TextField id;
 	Button button;
-
-	Level2DynamicContainer2Bundle l10n = new Level2DynamicContainer2Bundle();
 
 	@Override
 	protected SubView createView(String viewName) {
@@ -63,7 +59,7 @@ public class Level2DynamicContainer2 extends LDynamicSubContainer {
 			window.setWidth(300, Unit.PIXELS);
 			window.setHeight(500, Unit.PIXELS);
 			window.setContent(selectedView);
-			window.setCaption(l10n.window());
+			window.setCaption("Dynamically created window");
 			window.addCloseListener(new CloseListener() {
 
 				@Override
@@ -94,10 +90,10 @@ public class Level2DynamicContainer2 extends LDynamicSubContainer {
 		setSpacing(true);
 		setMargin(true);
 
-		info = new Label();
+		info = new Label("This is dynamic container");
 		addComponent(info);
 
-		id = new TextField();
+		id = new TextField("Enter object id");
 		id.setConverter(new StringToIntegerConverter());
 		id.setValue("456");
 		id.setImmediate(true);
@@ -110,7 +106,7 @@ public class Level2DynamicContainer2 extends LDynamicSubContainer {
 		});
 		addComponent(id);
 
-		button = new Button();
+		button = new Button("Click to open object");
 		button.addClickListener(new ClickListener() {
 
 			@Override
@@ -120,19 +116,6 @@ public class Level2DynamicContainer2 extends LDynamicSubContainer {
 			}
 		});
 		addComponent(button);
-	}
-
-	@Messages({
-			@Message(key = "info", value = "This is dynamic container"),
-			@Message(key = "id", value = "Enter object id"),
-			@Message(key = "button", value = "Click to open object"),
-			@Message(key = "window", value = "Dynamically created window"),
-	})
-	@Override
-	protected void localize() {
-		info.setValue(l10n.info());
-		id.setCaption(l10n.id());
-		button.setCaption(l10n.button());
 	}
 
 }

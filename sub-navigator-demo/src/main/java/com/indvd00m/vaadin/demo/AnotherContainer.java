@@ -1,7 +1,5 @@
 package com.indvd00m.vaadin.demo;
 
-import com.github.peholmst.i18n4vaadin.annotations.Message;
-import com.github.peholmst.i18n4vaadin.annotations.Messages;
 import com.indvd00m.vaadin.demo.loggable.LSubContainer;
 import com.indvd00m.vaadin.navigator.SubView;
 import com.vaadin.ui.Button;
@@ -20,8 +18,6 @@ public class AnotherContainer extends LSubContainer {
 	String containerName = "test-containers";
 
 	VerticalLayout container;
-
-	AnotherContainerBundle l10n = new AnotherContainerBundle();
 
 	public AnotherContainer() {
 		// TODO Auto-generated constructor stub
@@ -68,11 +64,11 @@ public class AnotherContainer extends LSubContainer {
 
 	@Override
 	protected void build() {
-		v1 = new SimpleView("view1");
-		v2 = new SimpleView("view2");
-		v3 = new SimpleView("view3");
-		v4 = new SimpleView("view4");
-		v5 = new SimpleView("view5");
+		v1 = new SimpleView("view1", "View 1");
+		v2 = new SimpleView("view2", "View 2");
+		v3 = new SimpleView("view3", "View 3");
+		v4 = new SimpleView("view4", "View 4");
+		v5 = new SimpleView("view5", "View 5");
 
 		addView(v1);
 		addView(v2);
@@ -80,7 +76,7 @@ public class AnotherContainer extends LSubContainer {
 		addView(v4);
 		addView(v5);
 
-		b1 = new Button();
+		b1 = new Button("Button 1 (direct selecting)");
 		b1.addClickListener(new ClickListener() {
 
 			@Override
@@ -92,7 +88,7 @@ public class AnotherContainer extends LSubContainer {
 		});
 		addComponent(b1);
 
-		b2 = new Button();
+		b2 = new Button("Button 2 (direct selecting)");
 		b2.addClickListener(new ClickListener() {
 
 			@Override
@@ -104,7 +100,7 @@ public class AnotherContainer extends LSubContainer {
 		});
 		addComponent(b2);
 
-		b3 = new Button();
+		b3 = new Button("Button 3 (direct selecting)");
 		b3.addClickListener(new ClickListener() {
 
 			@Override
@@ -116,7 +112,7 @@ public class AnotherContainer extends LSubContainer {
 		});
 		addComponent(b3);
 
-		b4 = new Button();
+		b4 = new Button("Button 4 (navigator selecting)");
 		b4.addClickListener(new ClickListener() {
 
 			@Override
@@ -127,7 +123,7 @@ public class AnotherContainer extends LSubContainer {
 		});
 		addComponent(b4);
 
-		b5 = new Button();
+		b5 = new Button("Button 5 (navigator selecting)");
 		b5.addClickListener(new ClickListener() {
 
 			@Override
@@ -141,22 +137,6 @@ public class AnotherContainer extends LSubContainer {
 		container = new VerticalLayout();
 		container.setSizeFull();
 		addComponent(container);
-	}
-
-	@Messages({
-			@Message(key = "button1", value = "Button 1 (direct selecting)"),
-			@Message(key = "button2", value = "Button 2 (direct selecting)"),
-			@Message(key = "button3", value = "Button 3 (direct selecting)"),
-			@Message(key = "button4", value = "Button 4 (navigator selecting)"),
-			@Message(key = "button5", value = "Button 5 (navigator selecting)"),
-	})
-	@Override
-	protected void localize() {
-		b1.setCaption(l10n.button1());
-		b2.setCaption(l10n.button2());
-		b3.setCaption(l10n.button3());
-		b4.setCaption(l10n.button4());
-		b5.setCaption(l10n.button5());
 	}
 
 }

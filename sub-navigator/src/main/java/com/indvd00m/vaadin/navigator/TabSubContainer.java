@@ -28,9 +28,13 @@ public abstract class TabSubContainer extends SubContainer implements SelectedTa
 		selectedViewChangeDirected();
 	}
 
-	protected void addView(SubView view, Resource icon) {
+	protected void addView(SubView view, String caption, Resource icon) {
 		addView(view);
-		getTabSheet().addTab(view, "", icon);
+		getTabSheet().addTab(view, caption, icon);
+	}
+
+	protected void addView(SubView view, Resource icon) {
+		addView(view, "", icon);
 	}
 
 	@Override

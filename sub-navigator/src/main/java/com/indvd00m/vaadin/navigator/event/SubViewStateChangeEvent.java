@@ -2,7 +2,7 @@ package com.indvd00m.vaadin.navigator.event;
 
 import java.util.Date;
 
-import com.indvd00m.vaadin.navigator.LocalizableView;
+import com.indvd00m.vaadin.navigator.SubView;
 import com.indvd00m.vaadin.navigator.ViewState;
 
 /**
@@ -12,12 +12,12 @@ import com.indvd00m.vaadin.navigator.ViewState;
  */
 public class SubViewStateChangeEvent {
 
-	LocalizableView subView;
+	SubView subView;
 	ViewState prevState;
 	ViewState currentState;
 	Date eventDate;
 
-	public SubViewStateChangeEvent(LocalizableView subView, ViewState prevState, ViewState currentState) {
+	public SubViewStateChangeEvent(SubView subView, ViewState prevState, ViewState currentState) {
 		super();
 		this.subView = subView;
 		this.prevState = prevState;
@@ -25,7 +25,7 @@ public class SubViewStateChangeEvent {
 		eventDate = new Date();
 	}
 
-	public LocalizableView getSubView() {
+	public SubView getSubView() {
 		return subView;
 	}
 
