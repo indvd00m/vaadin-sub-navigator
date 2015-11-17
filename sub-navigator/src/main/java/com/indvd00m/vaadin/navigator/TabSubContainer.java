@@ -35,7 +35,10 @@ public abstract class TabSubContainer extends SubContainer implements SelectedTa
 
 	@Override
 	protected SubView getSelectedView() {
-		return (SubView) getTabSheet().getSelectedTab();
+		TabSheet ts = getTabSheet();
+		if (ts != null)
+			return (SubView) ts.getSelectedTab();
+		return null;
 	}
 
 	@Override

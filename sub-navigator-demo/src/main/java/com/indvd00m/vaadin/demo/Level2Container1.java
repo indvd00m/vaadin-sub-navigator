@@ -2,8 +2,8 @@ package com.indvd00m.vaadin.demo;
 
 import com.github.peholmst.i18n4vaadin.annotations.Message;
 import com.github.peholmst.i18n4vaadin.annotations.Messages;
+import com.indvd00m.vaadin.demo.loggable.LTabSubContainer;
 import com.indvd00m.vaadin.navigator.SubView;
-import com.indvd00m.vaadin.navigator.TabSubContainer;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Component;
@@ -16,7 +16,7 @@ import com.vaadin.ui.TabSheet.Tab;
  *
  */
 @SuppressWarnings("serial")
-public class Level2Container1 extends TabSubContainer {
+public class Level2Container1 extends LTabSubContainer {
 
 	protected Accordion accord;
 	Level2Container1Bundle l10n = new Level2Container1Bundle();

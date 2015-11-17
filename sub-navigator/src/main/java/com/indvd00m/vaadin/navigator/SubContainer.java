@@ -1,5 +1,6 @@
 package com.indvd00m.vaadin.navigator;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,8 @@ public abstract class SubContainer extends SubView implements ViewDisplay, ViewP
 
 	protected abstract void setSelectedView(SubView view);
 
+	protected boolean showingView = false;
+
 	protected Map<String, SubView> getViews() {
 		return views;
 	}
@@ -40,30 +43,50 @@ public abstract class SubContainer extends SubView implements ViewDisplay, ViewP
 		super.detach();
 	}
 
-	private void restate() {
+	protected void restate() {
 		Navigator navigator = getNavigator();
 		String state = navigator.getState();
 		String path = getPath(this);
 		Map<String, SubView> viewsByState = getViews();
-		if (viewsByState.isEmpty() && equalsPath(state, path))
-			return;
+
+		if (equalsPath(state, path)) {
+			if (viewsByState.isEmpty()) {
+				return;
+			} else {
+				String viewPath = (String) viewsByState.keySet().toArray()[0];
+				navigator.navigateTo(viewPath);
+				return;
+			}
+		}
+
 		if (isSubPath(path, state)) {
 			// goto next level
-			String viewPath = (String) viewsByState.keySet().toArray()[0];
-			navigator.navigateTo(viewPath);
-			return;
+			if (viewsByState.isEmpty()) {
+				navigator.navigateTo(path);
+				return;
+			} else {
+				String viewPath = (String) viewsByState.keySet().toArray()[0];
+				navigator.navigateTo(viewPath);
+				return;
+			}
 		}
+
 		if (isSubPath(state, path)) {
 			// restate after build
-			for (String viewPath : viewsByState.keySet()) {
-				if (isSubPath(state, viewPath)) {
-					navigator.navigateTo(state);
-					return;
+			if (viewsByState.isEmpty()) {
+				navigator.navigateTo(state);
+				return;
+			} else {
+				for (String viewPath : viewsByState.keySet()) {
+					if (isSubPath(state, viewPath)) {
+						navigator.navigateTo(state);
+						return;
+					}
 				}
 			}
-			throw new IllegalArgumentException(
-					"Trying to navigate to an unknown state '" + state + "' and an error view provider not present");
 		}
+		throw new IllegalArgumentException(
+				"Trying to navigate to an unknown state '" + state + "' and an error view provider not present");
 	}
 
 	/**
@@ -74,6 +97,8 @@ public abstract class SubContainer extends SubView implements ViewDisplay, ViewP
 		SubView selectedView = getSelectedView();
 		String path = getPath(selectedView);
 		String state = navigator.getState();
+		if (showingView)
+			return;
 		if (!equalsPath(state, path)) {
 			if (isSelected())
 				navigator.navigateTo(path);
@@ -102,6 +127,12 @@ public abstract class SubContainer extends SubView implements ViewDisplay, ViewP
 
 	@Override
 	public void showView(View view) {
+		boolean changedShowingView = false;
+		if (!showingView) {
+			showingView = true;
+			changedShowingView = true;
+		}
+
 		if (view == this) {
 
 		} else {
@@ -110,27 +141,67 @@ public abstract class SubContainer extends SubView implements ViewDisplay, ViewP
 			Map<String, SubView> viewsByState = getViews();
 
 			if (viewsByState.values().contains(view)) {
-				SubView lnView = (SubView) view;
-				List<SubView> pathElements = lnView.getFullPathElements();
+				SubView subView = (SubView) view;
+				List<SubView> pathElements = subView.getPath();
 				for (SubView pathElement : pathElements) {
 					if (!pathElement.isSelected()) {
 						SubContainer container = pathElement.getViewContainer();
-						if (container != null)
+						if (container != null) {
+							container.deselect(container);
 							container.setSelectedView(pathElement);
+						}
 					}
+				}
+				if (subView instanceof SubContainer) {
+					SubContainer subContainer = (SubContainer) subView;
+					subContainer.deselect(subContainer);
 				}
 			} else {
 				String path = getFullPath();
 				if (isSubPath(state, path)) {
 					for (Entry<String, SubView> e : viewsByState.entrySet()) {
-						SubView lnView = e.getValue();
-						if (lnView instanceof ViewDisplay) {
-							((ViewDisplay) lnView).showView(view);
+						SubView subView = e.getValue();
+						String subPath = e.getKey();
+						if (isSubPath(state, subPath)) {
+							if (subView instanceof ViewDisplay) {
+								((ViewDisplay) subView).showView(view);
+							}
 						}
 					}
 				}
 			}
 		}
+
+		if (changedShowingView) {
+			showingView = false;
+			changedShowingView = false;
+		}
+	}
+
+	protected void deselect(SubContainer container) {
+		List<SubView> selectedPath = container.getSelectedPath();
+		for (int i = selectedPath.size() - 1; i >= 0; i--) {
+			SubView subView = selectedPath.get(i);
+			if (subView instanceof SubContainer) {
+				SubContainer subContainer = (SubContainer) subView;
+				subContainer.deselect(subContainer);
+			}
+		}
+	}
+
+	protected List<SubView> getSelectedPath() {
+		List<SubView> path = new ArrayList<SubView>();
+		SubView selectedView = getSelectedView();
+		while (selectedView != null) {
+			path.add(selectedView);
+			if (selectedView instanceof SubContainer) {
+				SubContainer container = (SubContainer) selectedView;
+				selectedView = container.getSelectedView();
+			} else {
+				break;
+			}
+		}
+		return path;
 	}
 
 	@Override
@@ -146,23 +217,23 @@ public abstract class SubContainer extends SubView implements ViewDisplay, ViewP
 	}
 
 	@Override
-	public View getView(String navigationState) {
+	public View getView(String state) {
 		for (Entry<String, SubView> e : getViews().entrySet()) {
 			String path = e.getKey();
 			SubView view = e.getValue();
-			if (equalsPath(navigationState, path)) {
+			if (equalsPath(state, path)) {
 				return view;
 			}
-			if (isSubPath(navigationState, path)) {
+			if (isSubPath(state, path)) {
 				if (view instanceof SubContainer) {
 					SubContainer container = (SubContainer) view;
-					return container.getView(navigationState);
+					return container.getView(state);
 				}
 				return view;
 			}
 		}
 		String path = getPath(this);
-		if (isSubPath(navigationState, path)) {
+		if (isSubPath(state, path)) {
 			return this;
 		}
 		return null;

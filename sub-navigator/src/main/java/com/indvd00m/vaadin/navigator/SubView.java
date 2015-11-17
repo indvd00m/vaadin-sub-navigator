@@ -29,7 +29,11 @@ public abstract class SubView extends LocalizableView implements View {
 		return viewContainer.getPath(this);
 	}
 
-	public List<SubView> getFullPathElements() {
+	public int getLevel() {
+		return getPath().size();
+	}
+
+	public List<SubView> getPath() {
 		List<SubView> path = new ArrayList<SubView>();
 		path.add(this);
 		SubContainer parent = getViewContainer();
@@ -41,10 +45,14 @@ public abstract class SubView extends LocalizableView implements View {
 		return path;
 	}
 
+	public boolean isRoot() {
+		return getLevel() == 1;
+	}
+
 	public boolean isSelected() {
 		if (viewContainer == null)
 			return true;
-		List<SubView> pathElements = getFullPathElements();
+		List<SubView> pathElements = getPath();
 		for (int i = 0; i < pathElements.size(); i++) {
 			SubView pathElement = pathElements.get(i);
 			SubView nextElement = null;
@@ -76,11 +84,11 @@ public abstract class SubView extends LocalizableView implements View {
 		if (!isSelected())
 			return;
 		clean();
-		viewState = ViewState.Cleaned;
+		setViewState(ViewState.Cleaned);
 		build();
-		viewState = ViewState.Builded;
+		setViewState(ViewState.Builded);
 		localize();
-		viewState = ViewState.Localized;
+		setViewState(ViewState.Localized);
 	}
 
 	public SubContainer getViewContainer() {

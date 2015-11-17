@@ -1,10 +1,10 @@
 package com.indvd00m.vaadin.navigator;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 
 /**
  * @author indvd00m (gotoindvdum[at]gmail[dot]com)
@@ -23,13 +23,9 @@ public abstract class DynamicSubContainer extends SubContainer {
 	}
 
 	@Override
-	public void enter(ViewChangeEvent event) {
-		setSelectedView(null);
-		super.enter(event);
-	}
-
 	public void addView(SubView view) {
-		views.clear();
+		if (!views.isEmpty())
+			throw new IllegalStateException(getClass().getSimpleName() + " can contain only one element!");
 		view.setViewContainer(this);
 		views.put(view.getFullPath(), view);
 	}
@@ -37,18 +33,38 @@ public abstract class DynamicSubContainer extends SubContainer {
 	@Override
 	public void showView(View view) {
 		super.showView(view);
-		views.clear();
+		SubView subView = (SubView) view;
+		String subPath = subView.getFullPath();
+		String state = getNavigator().getState();
+		if (equalsPath(state, subPath)) {
+			List<SubView> path = subView.getPath();
+			for (int i = path.size() - 1; i >= 0; i--) {
+				SubView pathElement = path.get(i);
+				if (pathElement instanceof DynamicSubContainer) {
+					DynamicSubContainer dynamicContainer = (DynamicSubContainer) pathElement;
+					dynamicContainer.views.clear();
+				}
+			}
+		}
+	}
+
+	@Override
+	protected void deselect(SubContainer container) {
+		SubView selectedView = container.getSelectedView();
+		super.deselect(container);
+		if (selectedView != null) {
+			selectedView.setViewContainer(null);
+			container.setSelectedView(null);
+		}
 	}
 
 	@Override
 	public View getView(String state) {
 		View view = super.getView(state);
 		if (view == this) {
+			if (!isSelected())
+				return this;
 			String path = getPath(this);
-			if (state == null || state.trim().isEmpty())
-				return null;
-			if (!isSubPath(state, path))
-				return null;
 			if (equalsPath(state, path))
 				return this;
 			String subPath = trimDivider(state.replaceFirst("\\Q" + path + "\\E", ""));
@@ -57,10 +73,9 @@ public abstract class DynamicSubContainer extends SubContainer {
 			if (subView == null)
 				return null;
 			addView(subView);
-			if (viewState != ViewState.Attached) {
-				if (isSelected())
-					return getView(state);
-			}
+			String fullSubPath = subView.getFullPath();
+			if (!isSubPath(state, fullSubPath))
+				return null;
 		}
 		return view;
 	}

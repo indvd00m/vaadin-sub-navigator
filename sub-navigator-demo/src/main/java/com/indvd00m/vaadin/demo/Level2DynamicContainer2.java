@@ -18,36 +18,26 @@ import com.vaadin.ui.Window.CloseListener;
 
 /**
  * @author indvd00m (gotoindvdum[at]gmail[dot]com)
- * @date Nov 16, 2015 8:38:24 PM
+ * @date Nov 16, 2015 8:39:01 PM
  *
  */
 @SuppressWarnings("serial")
-public class Level2DynamicContainer1 extends LDynamicSubContainer {
+public class Level2DynamicContainer2 extends LDynamicSubContainer {
 
-	String viewName;
-
-	SimpleView selectedView;
+	Level2DynamicContainer1 selectedView;
 	boolean autoRemove = false;
 
 	Label info;
 	TextField id;
 	Button button;
 
-	Level2DynamicContainer1Bundle l10n = new Level2DynamicContainer1Bundle();
-
-	public Level2DynamicContainer1() {
-		this("dynamic-container");
-	}
-
-	public Level2DynamicContainer1(String viewName) {
-		this.viewName = viewName;
-	}
+	Level2DynamicContainer2Bundle l10n = new Level2DynamicContainer2Bundle();
 
 	@Override
 	protected SubView createView(String viewName) {
 		if (!viewName.matches("\\d+"))
 			return null;
-		SimpleView view = new SimpleView(viewName);
+		Level2DynamicContainer1 view = new Level2DynamicContainer1(viewName);
 		return view;
 	}
 
@@ -66,10 +56,10 @@ public class Level2DynamicContainer1 extends LDynamicSubContainer {
 				autoRemove = false;
 			}
 		}
-		if (view instanceof SimpleView) {
-			selectedView = (SimpleView) view;
+		if (view instanceof Level2DynamicContainer1) {
+			selectedView = (Level2DynamicContainer1) view;
 			Window window = new Window();
-			window.setModal(true);
+			window.setModal(false);
 			window.setWidth(300, Unit.PIXELS);
 			window.setHeight(500, Unit.PIXELS);
 			window.setContent(selectedView);
@@ -95,7 +85,7 @@ public class Level2DynamicContainer1 extends LDynamicSubContainer {
 
 	@Override
 	public String getViewName() {
-		return viewName;
+		return "dynamic-container2";
 	}
 
 	@Override
@@ -109,7 +99,7 @@ public class Level2DynamicContainer1 extends LDynamicSubContainer {
 
 		id = new TextField();
 		id.setConverter(new StringToIntegerConverter());
-		id.setValue("123");
+		id.setValue("456");
 		id.setImmediate(true);
 		id.addValueChangeListener(new ValueChangeListener() {
 
@@ -133,14 +123,14 @@ public class Level2DynamicContainer1 extends LDynamicSubContainer {
 	}
 
 	@Messages({
-			@Message(key = "info", value = "This is dynamic container with name {0}"),
+			@Message(key = "info", value = "This is dynamic container"),
 			@Message(key = "id", value = "Enter object id"),
 			@Message(key = "button", value = "Click to open object"),
 			@Message(key = "window", value = "Dynamically created window"),
 	})
 	@Override
 	protected void localize() {
-		info.setValue(l10n.info("\"" + viewName) + "\"");
+		info.setValue(l10n.info());
 		id.setCaption(l10n.id());
 		button.setCaption(l10n.button());
 	}

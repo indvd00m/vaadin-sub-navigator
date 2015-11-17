@@ -2,7 +2,7 @@ package com.indvd00m.vaadin.demo;
 
 import com.github.peholmst.i18n4vaadin.annotations.Message;
 import com.github.peholmst.i18n4vaadin.annotations.Messages;
-import com.indvd00m.vaadin.navigator.SubContainer;
+import com.indvd00m.vaadin.demo.loggable.LSubContainer;
 import com.indvd00m.vaadin.navigator.SubView;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -15,7 +15,7 @@ import com.vaadin.ui.VerticalLayout;
  *
  */
 @SuppressWarnings("serial")
-public class AnotherContainer extends SubContainer {
+public class AnotherContainer extends LSubContainer {
 
 	String containerName = "test-containers";
 
@@ -33,7 +33,7 @@ public class AnotherContainer extends SubContainer {
 
 	@Override
 	protected SubView getSelectedView() {
-		if (container.getComponentCount() == 0)
+		if (container == null || container.getComponentCount() == 0)
 			return null;
 		return (SubView) container.getComponent(0);
 	}

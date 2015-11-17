@@ -1,8 +1,15 @@
 package com.indvd00m.vaadin.navigator;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import com.github.peholmst.i18n4vaadin.LocaleChangedEvent;
 import com.github.peholmst.i18n4vaadin.LocaleChangedListener;
 import com.github.peholmst.i18n4vaadin.util.I18NHolder;
+import com.indvd00m.vaadin.navigator.event.SubViewStateChangeEvent;
+import com.indvd00m.vaadin.navigator.event.SubViewStateChangeListener;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -15,6 +22,8 @@ public abstract class LocalizableView extends VerticalLayout implements LocaleCh
 
 	protected ViewState viewState = ViewState.Created;
 
+	protected List<SubViewStateChangeListener> stateListeners = new ArrayList<SubViewStateChangeListener>();
+
 	abstract protected void build();
 
 	abstract protected void localize();
@@ -23,7 +32,7 @@ public abstract class LocalizableView extends VerticalLayout implements LocaleCh
 	public void localeChanged(LocaleChangedEvent event) {
 		if (viewState == ViewState.Builded || viewState == ViewState.Localized) {
 			localize();
-			viewState = ViewState.Localized;
+			setViewState(ViewState.Localized);
 		}
 	}
 
@@ -32,21 +41,49 @@ public abstract class LocalizableView extends VerticalLayout implements LocaleCh
 		super.attach();
 		onAttach();
 		I18NHolder.get().addLocaleChangedListener(this);
-		viewState = ViewState.Attached;
+		setViewState(ViewState.Attached);
 	}
 
 	protected void onAttach() {
 		build();
-		viewState = ViewState.Builded;
+		setViewState(ViewState.Builded);
 		localize();
-		viewState = ViewState.Localized;
+		setViewState(ViewState.Localized);
 	}
 
 	@Override
 	public void detach() {
 		I18NHolder.get().removeLocaleChangedListener(this);
 		super.detach();
-		viewState = ViewState.Detached;
+		setViewState(ViewState.Detached);
+	}
+
+	public ViewState getViewState() {
+		return viewState;
+	}
+
+	@SuppressWarnings("unused")
+	protected void setViewState(ViewState viewState) {
+		ViewState prevState = this.viewState;
+		this.viewState = viewState;
+		if (false) {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+			System.out.println(String.format("%s %s: %s", sdf.format(new Date()), ((SubView) this).getFullPath(),
+					viewState.name()));
+		}
+		SubViewStateChangeEvent event = new SubViewStateChangeEvent(this, prevState, viewState);
+		for (SubViewStateChangeListener listener : stateListeners) {
+			listener.subViewStateChanged(event);
+		}
+	}
+
+	public void addSubViewStateChangeListener(SubViewStateChangeListener listener) {
+		if (!stateListeners.contains(listener))
+			stateListeners.add(listener);
+	}
+
+	public void removeSubViewStateChangeListener(SubViewStateChangeListener listener) {
+		stateListeners.remove(listener);
 	}
 
 }
