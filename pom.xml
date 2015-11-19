@@ -9,6 +9,7 @@
 	<name>Vaadin SubNavigator Add-on Root Project</name>
 
 	<modules>
+		<module>sub-navigator-api</module>
 		<module>sub-navigator</module>
 		<module>sub-navigator-demo</module>
 	</modules>

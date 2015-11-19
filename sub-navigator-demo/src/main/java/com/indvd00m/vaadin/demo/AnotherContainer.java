@@ -1,7 +1,8 @@
 package com.indvd00m.vaadin.demo;
 
-import com.indvd00m.vaadin.demo.loggable.LSubContainer;
-import com.indvd00m.vaadin.navigator.SubView;
+import com.indvd00m.vaadin.navigator.api.ISubContainer;
+import com.indvd00m.vaadin.navigator.api.ISubNavigator;
+import com.indvd00m.vaadin.navigator.api.ISubView;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -13,9 +14,11 @@ import com.vaadin.ui.VerticalLayout;
  *
  */
 @SuppressWarnings("serial")
-public class AnotherContainer extends LSubContainer {
+public class AnotherContainer extends VerticalLayout implements ISubContainer {
 
+	ISubNavigator subNavigator;
 	String containerName = "test-containers";
+	AnotherContainer thisView = this;
 
 	VerticalLayout container;
 
@@ -28,20 +31,20 @@ public class AnotherContainer extends LSubContainer {
 	}
 
 	@Override
-	protected SubView getSelectedView() {
+	public ISubView getSelectedView() {
 		if (container == null || container.getComponentCount() == 0)
 			return null;
-		return (SubView) container.getComponent(0);
+		return (ISubView) container.getComponent(0);
 	}
 
 	@Override
-	protected void setSelectedView(SubView view) {
+	public void setSelectedView(ISubView view) {
 		container.removeAllComponents();
 		container.addComponent(view);
 	}
 
 	@Override
-	protected void clean() {
+	public void clean() {
 		removeAllComponents();
 	}
 
@@ -63,18 +66,20 @@ public class AnotherContainer extends LSubContainer {
 	Button b5;
 
 	@Override
-	protected void build() {
+	public void build() {
+		subNavigator = ((SubNavigatorUI) getUI()).getSubNavigator();
+
 		v1 = new SimpleView("view1", "View 1");
 		v2 = new SimpleView("view2", "View 2");
 		v3 = new SimpleView("view3", "View 3");
 		v4 = new SimpleView("view4", "View 4");
 		v5 = new SimpleView("view5", "View 5");
 
-		addView(v1);
-		addView(v2);
-		addView(v3);
-		addView(v4);
-		addView(v5);
+		subNavigator.register(this, v1);
+		subNavigator.register(this, v2);
+		subNavigator.register(this, v3);
+		subNavigator.register(this, v4);
+		subNavigator.register(this, v5);
 
 		b1 = new Button("Button 1 (direct selecting)");
 		b1.addClickListener(new ClickListener() {
@@ -82,7 +87,7 @@ public class AnotherContainer extends LSubContainer {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				setSelectedView(v1);
-				selectedViewChangeDirected();
+				subNavigator.selectedViewChangeDirected(thisView);
 			}
 
 		});
@@ -94,7 +99,7 @@ public class AnotherContainer extends LSubContainer {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				setSelectedView(v2);
-				selectedViewChangeDirected();
+				subNavigator.selectedViewChangeDirected(thisView);
 			}
 
 		});
@@ -106,7 +111,7 @@ public class AnotherContainer extends LSubContainer {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				setSelectedView(v3);
-				selectedViewChangeDirected();
+				subNavigator.selectedViewChangeDirected(thisView);
 			}
 
 		});
@@ -117,7 +122,8 @@ public class AnotherContainer extends LSubContainer {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				getNavigator().navigateTo(v4.getFullPath());
+				String path = subNavigator.getPath(v4);
+				getUI().getNavigator().navigateTo(path);
 			}
 
 		});
@@ -128,7 +134,8 @@ public class AnotherContainer extends LSubContainer {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				getNavigator().navigateTo(v5.getFullPath());
+				String path = subNavigator.getPath(v5);
+				getUI().getNavigator().navigateTo(path);
 			}
 
 		});

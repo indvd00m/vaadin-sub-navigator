@@ -1,9 +1,14 @@
 package com.indvd00m.vaadin.demo;
 
-import com.indvd00m.vaadin.demo.loggable.LTabSubContainer;
+import com.indvd00m.vaadin.navigator.api.ISubContainer;
+import com.indvd00m.vaadin.navigator.api.ISubNavigator;
+import com.indvd00m.vaadin.navigator.api.ISubView;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Resource;
 import com.vaadin.ui.Accordion;
-import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
+import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * @author indvd00m (gotoindvdum[at]gmail[dot]com)
@@ -11,17 +16,13 @@ import com.vaadin.ui.TabSheet;
  *
  */
 @SuppressWarnings("serial")
-public class Level2Container1 extends LTabSubContainer {
+public class Level2Container1 extends VerticalLayout implements ISubContainer, SelectedTabChangeListener {
 
+	protected ISubNavigator subNavigator;
 	protected Accordion accord;
 
 	@Override
-	public TabSheet getTabSheet() {
-		return accord;
-	}
-
-	@Override
-	protected void clean() {
+	public void clean() {
 		removeAllComponents();
 	}
 
@@ -31,7 +32,9 @@ public class Level2Container1 extends LTabSubContainer {
 	}
 
 	@Override
-	protected void build() {
+	public void build() {
+		subNavigator = ((SubNavigatorUI) getUI()).getSubNavigator();
+
 		setSizeFull();
 		setSpacing(true);
 		setMargin(true);
@@ -45,6 +48,30 @@ public class Level2Container1 extends LTabSubContainer {
 
 		addView(new AnotherContainer("level3_1"), "Level 3 container 1", FontAwesome.ANDROID);
 		addView(new AnotherContainer("level3_2"), "Level 3 container 2", FontAwesome.APPLE);
+
+		accord.addSelectedTabChangeListener(this);
+	}
+
+	void addView(ISubView view, String caption, Resource icon) {
+		subNavigator.register(this, view);
+		accord.addTab(view, caption, icon);
+	}
+
+	@Override
+	public ISubView getSelectedView() {
+		if (accord == null || accord.getComponentCount() == 0)
+			return null;
+		return (ISubView) accord.getSelectedTab();
+	}
+
+	@Override
+	public void setSelectedView(ISubView view) {
+		accord.setSelectedTab(view);
+	}
+
+	@Override
+	public void selectedTabChange(SelectedTabChangeEvent event) {
+		subNavigator.selectedViewChangeDirected(this);
 	}
 
 }
