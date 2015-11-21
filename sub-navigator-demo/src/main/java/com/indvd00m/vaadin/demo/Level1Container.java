@@ -32,8 +32,7 @@ import com.vaadin.ui.VerticalLayout;
  *
  */
 @SuppressWarnings("serial")
-public class Level1Container extends VerticalLayout
-		implements ISubContainer, IViewStatusChangeListener, SelectedTabChangeListener {
+public class Level1Container extends VerticalLayout implements ISubContainer, IViewStatusChangeListener, SelectedTabChangeListener {
 
 	ISubNavigator subNavigator;
 
@@ -64,8 +63,7 @@ public class Level1Container extends VerticalLayout
 		setSpacing(true);
 		setSizeFull();
 
-		Label info = new Label(
-				"Try to navigate by mouse clicking, back/forward browser buttons, reload(F5), or manual url editing.");
+		Label info = new Label("Try to navigate by mouse clicking, back/forward browser buttons, reloading (F5) or manual url editing.");
 		addComponent(info);
 
 		HorizontalLayout hl = new HorizontalLayout();
@@ -95,7 +93,7 @@ public class Level1Container extends VerticalLayout
 		ts.setImmediate(true);
 		ts.setSizeFull();
 		addComponent(ts);
-		setExpandRatio(ts, 3f);
+		setExpandRatio(ts, 2f);
 
 		logLabel = new Label();
 		logLabel.setContentMode(ContentMode.PREFORMATTED);
@@ -114,6 +112,7 @@ public class Level1Container extends VerticalLayout
 		addView(new Level2Container1(), "Level 2 container 1", FontAwesome.LEVEL_UP);
 		addView(new Level2DynamicContainer1(), "Level 2 dynamic container 1", FontAwesome.LEVEL_DOWN);
 		addView(new Level2DynamicContainer2(), "Level 2 dynamic container 2", FontAwesome.ALIGN_LEFT);
+		addView(new Level2DynamicContainer3(), "Level 2 dynamic container 3", FontAwesome.BAN);
 
 		ts.addSelectedTabChangeListener(this);
 	}
@@ -158,7 +157,7 @@ public class Level1Container extends VerticalLayout
 
 	@Override
 	public void selectedTabChange(SelectedTabChangeEvent event) {
-		subNavigator.selectedViewChangeDirected(this);
+		subNavigator.notifySelectedChangeDirected(this);
 	}
 
 }

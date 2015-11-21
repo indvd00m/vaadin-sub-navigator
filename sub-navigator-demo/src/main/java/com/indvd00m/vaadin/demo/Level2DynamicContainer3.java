@@ -18,27 +18,35 @@ import com.vaadin.ui.Window.CloseListener;
 
 /**
  * @author indvd00m (gotoindvdum[at]gmail[dot]com)
- * @date Nov 16, 2015 8:39:01 PM
+ * @date Nov 16, 2015 8:38:24 PM
  *
  */
 @SuppressWarnings("serial")
-public class Level2DynamicContainer2 extends VerticalLayout implements ISubDynamicContainer {
+public class Level2DynamicContainer3 extends VerticalLayout implements ISubDynamicContainer {
 
 	protected ISubNavigator subNavigator;
-	Level2DynamicContainer1 selectedView;
+	String viewName;
+	AnotherContainer selectedView;
 	boolean autoRemove = false;
+	Level2DynamicContainer3 thisView = this;
 
 	Label info;
 	TextField id;
 	Button button;
 
-	Level2DynamicContainer2 thisView = this;
+	public Level2DynamicContainer3() {
+		this("dynamic-container3");
+	}
+
+	public Level2DynamicContainer3(String viewName) {
+		this.viewName = viewName;
+	}
 
 	@Override
 	public ISubView createView(String viewName) {
 		if (!viewName.matches("\\d+"))
 			return null;
-		Level2DynamicContainer1 view = new Level2DynamicContainer1(viewName);
+		AnotherContainer view = new AnotherContainer(viewName);
 		return view;
 	}
 
@@ -57,10 +65,10 @@ public class Level2DynamicContainer2 extends VerticalLayout implements ISubDynam
 				autoRemove = false;
 			}
 		}
-		if (view instanceof Level2DynamicContainer1) {
-			selectedView = (Level2DynamicContainer1) view;
+		if (view instanceof AnotherContainer) {
+			selectedView = (AnotherContainer) view;
 			Window window = new Window();
-			window.setModal(false);
+			window.setModal(true);
 			window.setWidth(300, Unit.PIXELS);
 			window.setHeight(500, Unit.PIXELS);
 			window.setContent(selectedView);
@@ -86,7 +94,7 @@ public class Level2DynamicContainer2 extends VerticalLayout implements ISubDynam
 
 	@Override
 	public String getViewName() {
-		return "dynamic-container2";
+		return viewName;
 	}
 
 	@Override
@@ -97,12 +105,12 @@ public class Level2DynamicContainer2 extends VerticalLayout implements ISubDynam
 		setSpacing(true);
 		setMargin(true);
 
-		info = new Label("This is dynamic container");
+		info = new Label("This is dynamic container with name " + viewName);
 		addComponent(info);
 
 		id = new TextField("Enter object id");
 		id.setConverter(new StringToIntegerConverter());
-		id.setValue("456");
+		id.setValue("789");
 		id.setImmediate(true);
 		id.addValueChangeListener(new ValueChangeListener() {
 

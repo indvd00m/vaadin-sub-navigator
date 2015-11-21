@@ -87,7 +87,7 @@ public class AnotherContainer extends VerticalLayout implements ISubContainer {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				setSelectedView(v1);
-				subNavigator.selectedViewChangeDirected(thisView);
+				subNavigator.notifySelectedChangeDirected(thisView);
 			}
 
 		});
@@ -99,7 +99,7 @@ public class AnotherContainer extends VerticalLayout implements ISubContainer {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				setSelectedView(v2);
-				subNavigator.selectedViewChangeDirected(thisView);
+				subNavigator.notifySelectedChangeDirected(thisView);
 			}
 
 		});
@@ -111,7 +111,7 @@ public class AnotherContainer extends VerticalLayout implements ISubContainer {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				setSelectedView(v3);
-				subNavigator.selectedViewChangeDirected(thisView);
+				subNavigator.notifySelectedChangeDirected(thisView);
 			}
 
 		});

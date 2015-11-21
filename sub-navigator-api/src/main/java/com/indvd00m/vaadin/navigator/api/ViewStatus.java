@@ -8,7 +8,7 @@ package com.indvd00m.vaadin.navigator.api;
 public enum ViewStatus {
 	Registered,
 	Attached,
-	Builded,
+	Built,
 	Cleaned,
 	Detached,
 	Unregistered,

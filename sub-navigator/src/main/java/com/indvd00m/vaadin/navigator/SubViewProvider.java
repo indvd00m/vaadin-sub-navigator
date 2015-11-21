@@ -36,9 +36,22 @@ public class SubViewProvider implements ViewProvider {
 
 	@Override
 	public View getView(String viewName) {
-		ISubContainer rootContainer = subNavigator.getRootContainer();
-		ContainerHolder rootHolder = subNavigator.getHolder(rootContainer);
-		return subNavigator.getView(rootHolder, viewName);
+		boolean changed = false;
+		if (!subNavigator.processing) {
+			subNavigator.processing = true;
+			changed = true;
+		}
+		try {
+			subNavigator.closeDynamicallyCreatedViews(viewName);
+			ISubContainer rootContainer = subNavigator.getRootContainer();
+			ContainerHolder rootHolder = subNavigator.getHolder(rootContainer);
+			return subNavigator.getView(rootHolder, viewName);
+		} finally {
+			if (changed) {
+				subNavigator.processing = false;
+				changed = false;
+			}
+		}
 	}
 
 }

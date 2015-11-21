@@ -1,8 +1,6 @@
 package com.indvd00m.vaadin.navigator;
 
-import com.indvd00m.vaadin.navigator.SubNavigator.ContainerHolder;
 import com.indvd00m.vaadin.navigator.SubNavigator.ViewHolder;
-import com.indvd00m.vaadin.navigator.api.ISubContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewDisplay;
 
@@ -24,14 +22,20 @@ public class SubViewDisplay implements ViewDisplay {
 	public void showView(View view) {
 		if (!(view instanceof ViewHolder))
 			return;
-		ViewHolder viewHolder = (ViewHolder) view;
-		subNavigator.showingView = true;
+
+		boolean changed = false;
+		if (!subNavigator.processing) {
+			subNavigator.processing = true;
+			changed = true;
+		}
 		try {
-			ISubContainer rootContainer = subNavigator.getRootContainer();
-			ContainerHolder rootHolder = subNavigator.getHolder(rootContainer);
-			subNavigator.showView(rootHolder, viewHolder);
+			ViewHolder viewHolder = (ViewHolder) view;
+			subNavigator.showView(viewHolder);
 		} finally {
-			subNavigator.showingView = false;
+			if (changed) {
+				subNavigator.processing = false;
+				changed = false;
+			}
 		}
 	}
 

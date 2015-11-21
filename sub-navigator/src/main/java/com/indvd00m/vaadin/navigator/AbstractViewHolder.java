@@ -29,6 +29,7 @@ public abstract class AbstractViewHolder<V extends ISubView> implements View, At
 	ViewStatus viewStatus;
 	List<ViewStatus> statusHistory = new ArrayList<ViewStatus>();
 	List<IViewStatusChangeListener> statusListeners = new ArrayList<IViewStatusChangeListener>();
+	boolean createdDynamically = false;
 
 	public AbstractViewHolder(V view) {
 		this.view = view;
@@ -85,8 +86,38 @@ public abstract class AbstractViewHolder<V extends ISubView> implements View, At
 		return Collections.unmodifiableList(statusHistory);
 	}
 
+	public boolean isBuilt() {
+		for (int i = statusHistory.size() - 1; i >= 0; i--) {
+			ViewStatus status = statusHistory.get(i);
+			if (status == ViewStatus.Built)
+				return true;
+			if (status == ViewStatus.Cleaned)
+				return false;
+		}
+		return false;
+	}
+
+	public boolean isCleaned() {
+		for (int i = statusHistory.size() - 1; i >= 0; i--) {
+			ViewStatus status = statusHistory.get(i);
+			if (status == ViewStatus.Cleaned)
+				return true;
+			if (status == ViewStatus.Built)
+				return false;
+		}
+		return false;
+	}
+
 	public boolean isBuiltAtLeastOnce() {
-		return statusHistory.contains(ViewStatus.Builded);
+		return statusHistory.contains(ViewStatus.Built);
+	}
+
+	public boolean isCreatedDynamically() {
+		return createdDynamically;
+	}
+
+	public void setCreatedDynamically(boolean createdDynamically) {
+		this.createdDynamically = createdDynamically;
 	}
 
 }

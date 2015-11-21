@@ -71,7 +71,7 @@ public class Level2Container1 extends VerticalLayout implements ISubContainer, S
 
 	@Override
 	public void selectedTabChange(SelectedTabChangeEvent event) {
-		subNavigator.selectedViewChangeDirected(this);
+		subNavigator.notifySelectedChangeDirected(this);
 	}
 
 }

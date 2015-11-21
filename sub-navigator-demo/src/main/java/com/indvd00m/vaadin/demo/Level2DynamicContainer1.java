@@ -79,7 +79,7 @@ public class Level2DynamicContainer1 extends VerticalLayout implements ISubDynam
 				public void windowClose(CloseEvent e) {
 					selectedView = null;
 					if (!autoRemove)
-						subNavigator.selectedViewChangeDirected(thisView);
+						subNavigator.notifySelectedChangeDirected(thisView);
 				}
 
 			});
