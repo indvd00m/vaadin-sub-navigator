@@ -57,6 +57,10 @@ public interface ISubNavigator {
 
 	void removeViewStatusChangeListener(IViewStatusChangeListener listener);
 
+	void addViewStatusChangeListener(ISubView view, IViewStatusChangeListener listener);
+
+	void removeViewStatusChangeListener(ISubView view, IViewStatusChangeListener listener);
+
 	Navigator getNavigator();
 
 	List<ViewStatus> getViewStatusHistory(ISubView view);

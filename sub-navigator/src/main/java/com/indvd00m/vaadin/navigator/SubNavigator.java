@@ -179,7 +179,7 @@ public class SubNavigator implements ISubNavigator {
 	}
 
 	protected ViewHolder getHolder(ISubView view) {
-		return (ViewHolder) viewHolders.get(view);
+		return viewHolders.get(view);
 	}
 
 	protected ContainerHolder getHolder(ISubContainer container) {
@@ -742,6 +742,20 @@ public class SubNavigator implements ISubNavigator {
 	@Override
 	public void removeViewStatusChangeListener(IViewStatusChangeListener listener) {
 		viewStatusDispatcher.removeViewStatusChangeListener(listener);
+	}
+
+	@Override
+	public void addViewStatusChangeListener(ISubView view, IViewStatusChangeListener listener) {
+		checkContains(view);
+		ViewHolder holder = getHolder(view);
+		holder.addViewStatusChangeListener(listener);
+	}
+
+	@Override
+	public void removeViewStatusChangeListener(ISubView view, IViewStatusChangeListener listener) {
+		checkContains(view);
+		ViewHolder holder = getHolder(view);
+		holder.removeViewStatusChangeListener(listener);
 	}
 
 	@Override
