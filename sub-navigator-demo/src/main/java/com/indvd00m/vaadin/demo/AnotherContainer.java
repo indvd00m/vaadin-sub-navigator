@@ -32,8 +32,6 @@ public class AnotherContainer extends VerticalLayout implements ISubContainer {
 
 	@Override
 	public ISubView getSelectedView() {
-		if (container == null || container.getComponentCount() == 0)
-			return null;
 		return (ISubView) container.getComponent(0);
 	}
 

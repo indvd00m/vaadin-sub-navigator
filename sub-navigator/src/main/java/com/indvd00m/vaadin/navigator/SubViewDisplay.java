@@ -1,6 +1,6 @@
 package com.indvd00m.vaadin.navigator;
 
-import com.indvd00m.vaadin.navigator.SubNavigator.ViewHolder;
+import com.indvd00m.vaadin.navigator.holder.ViewHolder;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewDisplay;
 

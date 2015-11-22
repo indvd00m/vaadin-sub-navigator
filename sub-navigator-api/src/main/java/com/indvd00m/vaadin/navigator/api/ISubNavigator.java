@@ -31,6 +31,8 @@ public interface ISubNavigator {
 
 	List<ISubView> getSelectedPath(ISubContainer container);
 
+	String getSelectedPath();
+
 	ISubView getSelected();
 
 	void setSelected(ISubView view);

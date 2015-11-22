@@ -145,8 +145,6 @@ public class Level1Container extends VerticalLayout implements ISubContainer, IV
 
 	@Override
 	public ISubView getSelectedView() {
-		if (ts == null || ts.getComponentCount() == 0)
-			return null;
 		return (ISubView) ts.getSelectedTab();
 	}
 

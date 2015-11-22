@@ -1,4 +1,4 @@
-package com.indvd00m.vaadin.navigator;
+package com.indvd00m.vaadin.navigator.holder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,6 +11,7 @@ import com.indvd00m.vaadin.navigator.api.event.IVIewStatusChangeEvent;
 import com.indvd00m.vaadin.navigator.api.event.IViewStatusChangeListener;
 import com.indvd00m.vaadin.navigator.event.ViewStatusChangeEvent;
 import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ClientConnector.AttachEvent;
 import com.vaadin.server.ClientConnector.AttachListener;
 import com.vaadin.server.ClientConnector.DetachEvent;
@@ -18,30 +19,35 @@ import com.vaadin.server.ClientConnector.DetachListener;
 
 /**
  * @author indvd00m (gotoindvdum[at]gmail[dot]com)
- * @date Nov 17, 2015 7:04:15 PM
+ * @date Nov 22, 2015 8:16:55 PM
  *
  */
 @SuppressWarnings("serial")
-public abstract class AbstractViewHolder<V extends ISubView> implements View, AttachListener, DetachListener {
+public class ViewHolder implements View, AttachListener, DetachListener {
 
-	V view;
+	ISubView view;
 	ISubContainer container;
 	ViewStatus viewStatus;
 	List<ViewStatus> statusHistory = new ArrayList<ViewStatus>();
 	List<IViewStatusChangeListener> statusListeners = new ArrayList<IViewStatusChangeListener>();
 	boolean createdDynamically = false;
 
-	public AbstractViewHolder(V view) {
+	public ViewHolder(ISubView view) {
 		this.view = view;
 		view.addAttachListener(this);
 		view.addDetachListener(this);
+	}
+
+	@Override
+	public void enter(ViewChangeEvent event) {
+
 	}
 
 	public ViewStatus getViewStatus() {
 		return viewStatus;
 	}
 
-	protected void setViewStatus(ViewStatus viewStatus) {
+	public void setViewStatus(ViewStatus viewStatus) {
 		ViewStatus prevStatus = this.viewStatus;
 		this.viewStatus = viewStatus;
 		statusHistory.add(viewStatus);
@@ -51,7 +57,7 @@ public abstract class AbstractViewHolder<V extends ISubView> implements View, At
 		}
 	}
 
-	public V getView() {
+	public ISubView getView() {
 		return view;
 	}
 
@@ -72,6 +78,10 @@ public abstract class AbstractViewHolder<V extends ISubView> implements View, At
 
 	public void removeViewStatusChangeListener(IViewStatusChangeListener listener) {
 		statusListeners.remove(listener);
+	}
+	
+	public void removeAllViewStatusChangeListeners() {
+		statusListeners.clear();
 	}
 
 	public ISubContainer getContainer() {

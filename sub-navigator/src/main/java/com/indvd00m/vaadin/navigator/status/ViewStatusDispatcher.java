@@ -1,4 +1,4 @@
-package com.indvd00m.vaadin.navigator;
+package com.indvd00m.vaadin.navigator.status;
 
 import java.util.ArrayList;
 import java.util.List;
