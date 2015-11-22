@@ -31,7 +31,7 @@ public class SimpleView extends VerticalLayout implements ISubView {
 	}
 
 	@Override
-	public String getViewName() {
+	public String getRelativePath() {
 		return viewName;
 	}
 

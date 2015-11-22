@@ -24,8 +24,8 @@ public class SubViewProvider implements ViewProvider {
 		if (viewAndParameters == null) {
 			return null;
 		}
-		ISubContainer rootContainer = subNavigator.getRootContainer();
-		String path = subNavigator.getPath(rootContainer);
+		ISubContainer root = subNavigator.getRoot();
+		String path = subNavigator.getPath(root);
 		if (subNavigator.isSubPath(viewAndParameters, path)) {
 			return viewAndParameters;
 		}
@@ -43,8 +43,8 @@ public class SubViewProvider implements ViewProvider {
 		}
 		try {
 			subNavigator.closeDynamicallyCreatedViews(viewName);
-			ISubContainer rootContainer = subNavigator.getRootContainer();
-			ContainerHolder rootHolder = subNavigator.getHolder(rootContainer);
+			ISubContainer root = subNavigator.getRoot();
+			ContainerHolder rootHolder = subNavigator.getHolder(root);
 			return subNavigator.getView(rootHolder, viewName);
 		} finally {
 			if (changed) {

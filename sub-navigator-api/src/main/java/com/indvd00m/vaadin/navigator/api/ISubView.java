@@ -9,7 +9,7 @@ import com.vaadin.ui.Component;
  */
 public interface ISubView extends Component {
 
-	String getViewName();
+	String getRelativePath();
 
 	void clean();
 

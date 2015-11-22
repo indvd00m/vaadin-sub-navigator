@@ -30,7 +30,7 @@ import com.vaadin.ui.UI;
 public class SubNavigator implements ISubNavigator {
 
 	Navigator navigator;
-	ISubContainer rootContainer;
+	ISubContainer root;
 	UriFragmentManager stateManager;
 	String currentNavigationState;
 	Map<ISubView, ViewHolder> viewHolders = new HashMap<ISubView, ViewHolder>();
@@ -44,7 +44,7 @@ public class SubNavigator implements ISubNavigator {
 
 	// TODO: hierarchical page title
 	// TODO: setDelimiter()
-	// TODO: deprecate double register of same view name
+	// TODO: deprecate double add of same view name
 
 	class ViewHolder extends AbstractViewHolder<ISubView> {
 
@@ -78,29 +78,29 @@ public class SubNavigator implements ISubNavigator {
 
 	}
 
-	public SubNavigator(UI ui, ISubContainer rootContainer) {
-		this(ui, rootContainer, null);
+	public SubNavigator(UI ui, ISubContainer root) {
+		this(ui, root, null);
 	}
 
-	public SubNavigator(UI ui, ISubContainer rootContainer, IViewStatusChangeListener listener) {
-		this(ui, rootContainer, listener, false);
+	public SubNavigator(UI ui, ISubContainer root, IViewStatusChangeListener listener) {
+		this(ui, root, listener, false);
 	}
 
-	public SubNavigator(UI ui, ISubContainer rootContainer, IViewStatusChangeListener listener, boolean debug) {
-		this.rootContainer = rootContainer;
+	public SubNavigator(UI ui, ISubContainer root, IViewStatusChangeListener listener, boolean debug) {
+		this.root = root;
 		this.debug = debug;
 		stateManager = new UriFragmentManager(ui.getPage());
 		navigator = new Navigator(ui, stateManager, viewDisplay);
 		navigator.addProvider(viewProvider);
 		if (listener != null)
 			addViewStatusChangeListener(listener);
-		if (register(rootContainer))
-			setRegisteredStatus(rootContainer);
+		if (addView(root))
+			setAddedStatus(root);
 		currentNavigationState = stateManager.getState();
 	}
 
-	protected boolean register(ISubView view) {
-		if (registered(view))
+	protected boolean addView(ISubView view) {
+		if (contains(view))
 			return false;
 		ViewHolder holder = createHolder(view);
 		viewHolders.put(view, holder);
@@ -109,13 +109,13 @@ public class SubNavigator implements ISubNavigator {
 		return true;
 	}
 
-	protected void setRegisteredStatus(ISubView view) {
+	protected void setAddedStatus(ISubView view) {
 		ViewHolder holder = getHolder(view);
-		holder.setViewStatus(ViewStatus.Registered);
+		holder.setViewStatus(ViewStatus.Added);
 	}
 
 	@Override
-	public void register(ISubContainer container, ISubView view) {
+	public void addView(ISubContainer container, ISubView view) {
 		if (container instanceof ISubDynamicContainer) {
 			ISubDynamicContainer dynamicContainer = (ISubDynamicContainer) container;
 			ContainerHolder containerHolder = getHolder(dynamicContainer);
@@ -127,11 +127,11 @@ public class SubNavigator implements ISubNavigator {
 				}
 			}
 		}
-		if (registered(container) && registered(view))
+		if (contains(container) && contains(view))
 			return;
 
-		boolean containerRegistered = register(container);
-		boolean viewRegistered = register(view);
+		boolean containerContains = addView(container);
+		boolean viewContains = addView(view);
 
 		ContainerHolder containerHolder = getHolder(container);
 		ViewHolder viewHolder = getHolder(view);
@@ -140,10 +140,10 @@ public class SubNavigator implements ISubNavigator {
 		String viewPath = getPath(view);
 		containerHolder.getViews().put(viewPath, view);
 
-		if (containerRegistered)
-			setRegisteredStatus(container);
-		if (viewRegistered)
-			setRegisteredStatus(view);
+		if (containerContains)
+			setAddedStatus(container);
+		if (viewContains)
+			setAddedStatus(view);
 	}
 
 	protected ViewHolder createHolder(ISubView view) {
@@ -155,8 +155,8 @@ public class SubNavigator implements ISubNavigator {
 	}
 
 	@Override
-	public void unregister(ISubView view) {
-		if (!registered(view))
+	public void removeView(ISubView view) {
+		if (!contains(view))
 			return;
 
 		ViewHolder holder = getHolder(view);
@@ -176,14 +176,14 @@ public class SubNavigator implements ISubNavigator {
 
 		if (!holder.isCleaned())
 			clean(view);
-		holder.setViewStatus(ViewStatus.Unregistered);
+		holder.setViewStatus(ViewStatus.Removed);
 		holder.statusListeners.clear();
 		viewHolders.remove(view);
 	}
 
 	@Override
-	public void unregister(ISubContainer container) {
-		if (!registered(container))
+	public void removeView(ISubContainer container) {
+		if (!contains(container))
 			return;
 
 		ContainerHolder containerHolder = getHolder(container);
@@ -195,12 +195,12 @@ public class SubNavigator implements ISubNavigator {
 			}
 			if (subView instanceof ISubContainer) {
 				ISubContainer subContainer = (ISubContainer) subView;
-				unregister(subContainer);
+				removeView(subContainer);
 			} else {
-				unregister(subView);
+				removeView(subView);
 			}
 		}
-		unregister((ISubView) container);
+		removeView((ISubView) container);
 	}
 
 	protected ViewHolder getHolder(ISubView view) {
@@ -213,7 +213,7 @@ public class SubNavigator implements ISubNavigator {
 
 	@Override
 	public void setSelected(ISubView view) {
-		checkRegistered(view);
+		checkContains(view);
 
 		if (!processing) {
 			navigator.navigateTo(getPath(view));
@@ -236,12 +236,12 @@ public class SubNavigator implements ISubNavigator {
 
 	@Override
 	public void rebuild(ISubView view) {
-		checkRegistered(view);
+		checkContains(view);
 		if (!processing) {
 			rebuildSimple(view);
 		} else {
-			if (currentView == null || !registered(currentView)) {
-				rebuildDifferentPath(rootContainer, view);
+			if (currentView == null || !contains(currentView)) {
+				rebuildDifferentPath(root, view);
 			} else {
 				rebuildDifferentPath(currentView, view);
 			}
@@ -249,9 +249,9 @@ public class SubNavigator implements ISubNavigator {
 	}
 
 	protected void rebuildDifferentPath(ISubView oldView, ISubView newView) {
-		if (!registered(oldView))
+		if (!contains(oldView))
 			return;
-		if (!registered(newView))
+		if (!contains(newView))
 			return;
 
 		if (oldView == newView) {
@@ -300,9 +300,9 @@ public class SubNavigator implements ISubNavigator {
 
 	@Override
 	public ISubView getDivergationNode(ISubView view1, ISubView view2) {
-		if (!registered(view1))
+		if (!contains(view1))
 			return null;
-		if (!registered(view2))
+		if (!contains(view2))
 			return null;
 
 		List<ISubView> pathList1 = getPathList(view1);
@@ -311,9 +311,9 @@ public class SubNavigator implements ISubNavigator {
 			return null;
 		if (pathList2.isEmpty())
 			return null;
-		if (pathList1.get(0) != rootContainer && pathList2.get(0) != rootContainer)
+		if (pathList1.get(0) != root && pathList2.get(0) != root)
 			return null;
-		ISubView lastDivergationNode = rootContainer;
+		ISubView lastDivergationNode = root;
 		int minSize = Math.min(pathList1.size(), pathList2.size());
 		for (int i = 0; i < minSize; i++) {
 			ISubView node1 = pathList1.get(i);
@@ -332,10 +332,10 @@ public class SubNavigator implements ISubNavigator {
 	}
 
 	@Override
-	public String getDivergationNode(String path1, String path2) {
+	public String getDivergationPath(String path1, String path2) {
 		String delimiter = "/";
-		path1 = trimDivider(path1);
-		path2 = trimDivider(path2);
+		path1 = trimDelimiter(path1);
+		path2 = trimDelimiter(path2);
 		String[] pathElements1 = path1.split(quote(delimiter));
 		String[] pathElements2 = path2.split(quote(delimiter));
 		StringBuilder divergationNode = new StringBuilder("");
@@ -349,18 +349,18 @@ public class SubNavigator implements ISubNavigator {
 				break;
 		}
 
-		return trimDivider(divergationNode.toString());
+		return trimDelimiter(divergationNode.toString());
 	}
 
 	@Override
-	public List<String> getNodesBetween(String path1, String path2) {
+	public List<String> getPathsBetween(String path1, String path2) {
 		List<String> nodes = new ArrayList<String>();
 		if (!isSubPath(path2, path1))
 			return nodes;
 		String delimiter = "/";
-		path1 = trimDivider(path1.replaceAll(quote(delimiter) + "+", delimiter));
-		path2 = trimDivider(path2.replaceAll(quote(delimiter) + "+", delimiter));
-		String remain = trimDivider(path2.replaceFirst(quote(path1), ""));
+		path1 = trimDelimiter(path1.replaceAll(quote(delimiter) + "+", delimiter));
+		path2 = trimDelimiter(path2.replaceAll(quote(delimiter) + "+", delimiter));
+		String remain = trimDelimiter(path2.replaceFirst(quote(path1), ""));
 		String lastNode = path1;
 		for (String node : remain.split(quote(delimiter))) {
 			String path = lastNode + delimiter + node;
@@ -393,7 +393,7 @@ public class SubNavigator implements ISubNavigator {
 
 	@Override
 	public boolean isSelected(ISubView view) {
-		checkRegistered(view);
+		checkContains(view);
 		ViewHolder holder = getHolder(view);
 		ISubContainer container = holder.getContainer();
 		if (container == null)
@@ -418,7 +418,7 @@ public class SubNavigator implements ISubNavigator {
 
 	@Override
 	public List<ISubView> getPathList(ISubView view) {
-		checkRegistered(view);
+		checkContains(view);
 		ViewHolder holder = getHolder(view);
 		List<ISubView> path = new ArrayList<ISubView>();
 		path.add(view);
@@ -434,31 +434,31 @@ public class SubNavigator implements ISubNavigator {
 
 	@Override
 	public String getPath(ISubView view) {
-		checkRegistered(view);
+		checkContains(view);
 		StringBuilder sb = new StringBuilder();
 		List<ISubView> pathList = getPathList(view);
 		for (ISubView pathElement : pathList) {
-			sb.append(pathElement.getViewName()).append("/");
+			sb.append(pathElement.getRelativePath()).append("/");
 		}
-		String path = trimDivider(sb.toString());
+		String path = trimDelimiter(sb.toString());
 		return path;
 	}
 
 	@Override
 	public int getLevel(ISubView view) {
-		checkRegistered(view);
+		checkContains(view);
 		return getPathList(view).size();
 	}
 
 	@Override
 	public boolean isRoot(ISubView view) {
-		checkRegistered(view);
-		return view == rootContainer;
+		checkContains(view);
+		return view == root;
 	}
 
 	@Override
 	public void notifySelectedChangeDirected(ISubContainer container) {
-		checkRegistered(container);
+		checkContains(container);
 		if (processing)
 			return;
 		ISubView selectedView = container.getSelectedView();
@@ -485,10 +485,10 @@ public class SubNavigator implements ISubNavigator {
 		String prevState = currentNavigationState;
 		HierarchyDirection direction = getDirection(prevState, state);
 		if (direction == HierarchyDirection.Nearby || direction == HierarchyDirection.Up) {
-			String divergationNode = getDivergationNode(prevState, state);
-			List<String> nodesBetween = getNodesBetween(divergationNode, prevState);
+			String divergationPath = getDivergationPath(prevState, state);
+			List<String> pathsBetween = getPathsBetween(divergationPath, prevState);
 			List<ISubView> oldBranch = new ArrayList<ISubView>();
-			for (String path : nodesBetween) {
+			for (String path : pathsBetween) {
 				ISubView view = getView(path);
 				if (view != null) {
 					oldBranch.add(view);
@@ -499,9 +499,9 @@ public class SubNavigator implements ISubNavigator {
 				if (holder.isCreatedDynamically()) {
 					if (view instanceof ISubContainer) {
 						ISubContainer container = (ISubContainer) view;
-						unregister(container);
+						removeView(container);
 					} else {
-						unregister(view);
+						removeView(view);
 					}
 					break;
 				}
@@ -539,7 +539,7 @@ public class SubNavigator implements ISubNavigator {
 			}
 		}
 
-		// try to find already registered view
+		// try to find already added view
 		for (Entry<String, ISubView> e : containerHolder.getViews().entrySet()) {
 			String viewPath = e.getKey();
 			ISubView view = e.getValue();
@@ -570,13 +570,13 @@ public class SubNavigator implements ISubNavigator {
 			if (container instanceof ISubDynamicContainer) {
 				// this container can dynamically create views, trying it
 				ISubDynamicContainer dynamicContainer = (ISubDynamicContainer) container;
-				String subPath = trimDivider(state.replaceFirst("\\Q" + path + "\\E", ""));
-				String viewName = subPath.replaceAll("/+.*", "");
-				ISubView subView = dynamicContainer.createView(viewName);
+				String subPath = trimDelimiter(state.replaceFirst("\\Q" + path + "\\E", ""));
+				String viewPath = subPath.replaceAll("/+.*", "");
+				ISubView subView = dynamicContainer.createView(viewPath);
 				if (subView != null) {
-					if (!viewName.equals(subView.getViewName()))
-						throw new IllegalStateException(String.format("Name of created view \"%s\" must be \"%s\"", subView.getViewName(), viewName));
-					register(dynamicContainer, subView);
+					if (!viewPath.equals(subView.getRelativePath()))
+						throw new IllegalStateException(String.format("Name of created view \"%s\" must be \"%s\"", subView.getRelativePath(), viewPath));
+					addView(dynamicContainer, subView);
 					getHolder(subView).setCreatedDynamically(true);
 					setSelected(subView);
 					// search in next level
@@ -638,14 +638,14 @@ public class SubNavigator implements ISubNavigator {
 					container.setSelectedView(null);
 				}
 			}
-			if (registered(selectedView)) {
+			if (contains(selectedView)) {
 				ViewHolder selectedHolder = getHolder(selectedView);
 				if (selectedHolder.isCreatedDynamically()) {
 					if (selectedView instanceof ISubContainer) {
 						ISubContainer subContainer = (ISubContainer) selectedView;
-						unregister(subContainer);
+						removeView(subContainer);
 					} else {
-						unregister(selectedView);
+						removeView(selectedView);
 					}
 				}
 			}
@@ -657,14 +657,14 @@ public class SubNavigator implements ISubNavigator {
 		ISubContainer container = holder.getContainer();
 		if (container == null)
 			return false;
-		if (container == rootContainer)
+		if (container == root)
 			return true;
 		return connected(container);
 	}
 
 	@Override
 	public List<ISubView> getSelectedPath(ISubContainer container) {
-		checkRegistered(container);
+		checkContains(container);
 		List<ISubView> path = new ArrayList<ISubView>();
 		ISubView selectedView = container.getSelectedView();
 		while (selectedView != null) {
@@ -681,9 +681,9 @@ public class SubNavigator implements ISubNavigator {
 
 	@Override
 	public ISubView getSelected() {
-		List<ISubView> path = getSelectedPath(rootContainer);
+		List<ISubView> path = getSelectedPath(root);
 		if (path.isEmpty())
-			return rootContainer;
+			return root;
 		return path.get(path.size() - 1);
 	}
 
@@ -698,24 +698,24 @@ public class SubNavigator implements ISubNavigator {
 	}
 
 	@Override
-	public String trimDividerRight(String path) {
+	public String trimDelimiterRight(String path) {
 		return path.replaceAll("/*$", "");
 	}
 
 	@Override
-	public String trimDividerLeft(String path) {
+	public String trimDelimiterLeft(String path) {
 		return path.replaceAll("^/*", "");
 	}
 
 	@Override
-	public String trimDivider(String path) {
-		return trimDividerLeft(trimDividerRight(path));
+	public String trimDelimiter(String path) {
+		return trimDelimiterLeft(trimDelimiterRight(path));
 	}
 
 	@Override
 	public boolean equalsPath(String path1, String path2) {
-		String trimmed1 = trimDivider(path1);
-		String trimmed2 = trimDivider(path2);
+		String trimmed1 = trimDelimiter(path1);
+		String trimmed2 = trimDelimiter(path2);
 		return trimmed1.equals(trimmed2);
 	}
 
@@ -723,21 +723,21 @@ public class SubNavigator implements ISubNavigator {
 	public boolean isSubPath(String sourcePath, String testPath) {
 		if (equalsPath(sourcePath, testPath))
 			return true;
-		String trimmedSource = trimDivider(sourcePath);
-		String trimmedTest = trimDivider(testPath);
+		String trimmedSource = trimDelimiter(sourcePath);
+		String trimmedTest = trimDelimiter(testPath);
 		if (trimmedTest.isEmpty())
 			return true;
 		return trimmedSource.startsWith(trimmedTest + "/");
 	}
 
 	@Override
-	public ISubContainer getRootContainer() {
-		return rootContainer;
+	public ISubContainer getRoot() {
+		return root;
 	}
 
 	@Override
 	public ViewStatus getViewStatus(ISubView view) {
-		checkRegistered(view);
+		checkContains(view);
 		ViewHolder holder = getHolder(view);
 		return holder.getViewStatus();
 	}
@@ -758,25 +758,25 @@ public class SubNavigator implements ISubNavigator {
 	}
 
 	@Override
-	public boolean registered(ISubView view) {
+	public boolean contains(ISubView view) {
 		return viewHolders.containsKey(view);
 	}
 
-	protected void checkRegistered(ISubView view) {
-		if (!registered(view))
-			throw new IllegalArgumentException("View is not registered: \"" + view.getViewName() + "\"");
+	protected void checkContains(ISubView view) {
+		if (!contains(view))
+			throw new IllegalArgumentException("View is not added: \"" + view.getRelativePath() + "\"");
 	}
 
 	@Override
 	public List<ViewStatus> getViewStatusHistory(ISubView view) {
-		checkRegistered(view);
+		checkContains(view);
 		ViewHolder holder = getHolder(view);
 		return Collections.unmodifiableList(holder.getStatusHistory());
 	}
 
 	@Override
 	public ISubContainer getContainer(ISubView view) {
-		checkRegistered(view);
+		checkContains(view);
 		ViewHolder holder = getHolder(view);
 		ISubContainer container = holder.getContainer();
 		return container;
@@ -784,7 +784,7 @@ public class SubNavigator implements ISubNavigator {
 
 	@Override
 	public List<ISubView> getSubViews(ISubContainer container) {
-		checkRegistered(container);
+		checkContains(container);
 		ContainerHolder holder = getHolder(container);
 		List<ISubView> subViews = new ArrayList<ISubView>(holder.getViews().values());
 		return Collections.unmodifiableList(subViews);
@@ -792,8 +792,8 @@ public class SubNavigator implements ISubNavigator {
 
 	@Override
 	public HierarchyDirection getDirection(ISubView sourceView, ISubView targetView) {
-		checkRegistered(sourceView);
-		checkRegistered(targetView);
+		checkContains(sourceView);
+		checkContains(targetView);
 		String sourcePath = getPath(sourceView);
 		String targetPath = getPath(targetView);
 		return getDirection(sourcePath, targetPath);

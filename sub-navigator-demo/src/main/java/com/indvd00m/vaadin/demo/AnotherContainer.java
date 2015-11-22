@@ -49,7 +49,7 @@ public class AnotherContainer extends VerticalLayout implements ISubContainer {
 	}
 
 	@Override
-	public String getViewName() {
+	public String getRelativePath() {
 		return containerName;
 	}
 
@@ -75,11 +75,11 @@ public class AnotherContainer extends VerticalLayout implements ISubContainer {
 		v4 = new SimpleView("view4", "View 4");
 		v5 = new SimpleView("view5", "View 5");
 
-		subNavigator.register(this, v1);
-		subNavigator.register(this, v2);
-		subNavigator.register(this, v3);
-		subNavigator.register(this, v4);
-		subNavigator.register(this, v5);
+		subNavigator.addView(this, v1);
+		subNavigator.addView(this, v2);
+		subNavigator.addView(this, v3);
+		subNavigator.addView(this, v4);
+		subNavigator.addView(this, v5);
 
 		b1 = new Button("Button 1 (direct selecting)");
 		b1.addClickListener(new ClickListener() {

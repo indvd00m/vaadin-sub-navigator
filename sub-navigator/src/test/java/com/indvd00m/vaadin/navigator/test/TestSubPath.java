@@ -26,17 +26,17 @@ public class TestSubPath {
 		ISubContainer rootContainer = mock(ISubContainer.class);
 		ISubNavigator subNavigator = new SubNavigator(ui, rootContainer);
 
-		assertEquals("test1/test2//", subNavigator.trimDividerLeft("test1/test2//"));
-		assertEquals("test1/test2//", subNavigator.trimDividerLeft("/test1/test2//"));
-		assertEquals("test1/test2//", subNavigator.trimDividerLeft("//test1/test2//"));
+		assertEquals("test1/test2//", subNavigator.trimDelimiterLeft("test1/test2//"));
+		assertEquals("test1/test2//", subNavigator.trimDelimiterLeft("/test1/test2//"));
+		assertEquals("test1/test2//", subNavigator.trimDelimiterLeft("//test1/test2//"));
 
-		assertEquals("//test1/test2", subNavigator.trimDividerRight("//test1/test2"));
-		assertEquals("//test1/test2", subNavigator.trimDividerRight("//test1/test2/"));
-		assertEquals("//test1/test2", subNavigator.trimDividerRight("//test1/test2//"));
+		assertEquals("//test1/test2", subNavigator.trimDelimiterRight("//test1/test2"));
+		assertEquals("//test1/test2", subNavigator.trimDelimiterRight("//test1/test2/"));
+		assertEquals("//test1/test2", subNavigator.trimDelimiterRight("//test1/test2//"));
 
-		assertEquals("test1/test2", subNavigator.trimDivider("//test1/test2"));
-		assertEquals("test1/test2", subNavigator.trimDivider("/test1/test2/"));
-		assertEquals("test1/test2", subNavigator.trimDivider("/test1/test2//"));
+		assertEquals("test1/test2", subNavigator.trimDelimiter("//test1/test2"));
+		assertEquals("test1/test2", subNavigator.trimDelimiter("/test1/test2/"));
+		assertEquals("test1/test2", subNavigator.trimDelimiter("/test1/test2//"));
 
 		assertTrue(subNavigator.equalsPath("/test/test2//", "test/test2"));
 		assertFalse(subNavigator.equalsPath("/test1/test2//", "test/test2"));

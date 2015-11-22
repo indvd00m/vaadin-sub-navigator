@@ -51,7 +51,7 @@ public class Level1Container extends VerticalLayout implements ISubContainer, IV
 	}
 
 	@Override
-	public String getViewName() {
+	public String getRelativePath() {
 		return "level1";
 	}
 
@@ -118,7 +118,7 @@ public class Level1Container extends VerticalLayout implements ISubContainer, IV
 	}
 
 	void addView(ISubView view, String caption, Resource icon) {
-		subNavigator.register(this, view);
+		subNavigator.addView(this, view);
 		ts.addTab(view, caption, icon);
 	}
 

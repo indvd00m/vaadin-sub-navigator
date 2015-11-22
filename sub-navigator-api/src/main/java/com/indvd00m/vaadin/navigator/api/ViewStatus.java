@@ -6,10 +6,10 @@ package com.indvd00m.vaadin.navigator.api;
  *
  */
 public enum ViewStatus {
-	Registered,
+	Added,
 	Attached,
 	Built,
 	Cleaned,
 	Detached,
-	Unregistered,
+	Removed,
 }

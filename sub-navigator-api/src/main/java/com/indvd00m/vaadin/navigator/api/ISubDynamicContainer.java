@@ -7,6 +7,6 @@ package com.indvd00m.vaadin.navigator.api;
  */
 public interface ISubDynamicContainer extends ISubContainer {
 
-	ISubView createView(String viewName);
+	ISubView createView(String viewPathAndParameters);
 
 }

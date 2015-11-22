@@ -12,13 +12,13 @@ import com.vaadin.navigator.Navigator;
  */
 public interface ISubNavigator {
 
-	void register(ISubContainer container, ISubView view);
+	void addView(ISubContainer container, ISubView view);
 
-	boolean registered(ISubView view);
+	boolean contains(ISubView view);
 
-	void unregister(ISubContainer container);
+	void removeView(ISubContainer container);
 
-	void unregister(ISubView view);
+	void removeView(ISubView view);
 
 	ViewStatus getViewStatus(ISubView view);
 
@@ -49,7 +49,7 @@ public interface ISubNavigator {
 
 	void setDebug(boolean debug);
 
-	ISubContainer getRootContainer();
+	ISubContainer getRoot();
 
 	void addViewStatusChangeListener(IViewStatusChangeListener listener);
 
@@ -67,11 +67,11 @@ public interface ISubNavigator {
 
 	boolean equalsPath(String path1, String path2);
 
-	String trimDivider(String path);
+	String trimDelimiter(String path);
 
-	String trimDividerLeft(String path);
+	String trimDelimiterLeft(String path);
 
-	String trimDividerRight(String path);
+	String trimDelimiterRight(String path);
 
 	HierarchyDirection getDirection(ISubView sourceView, ISubView targetView);
 
@@ -79,9 +79,9 @@ public interface ISubNavigator {
 
 	ISubView getView(String path);
 
-	List<String> getNodesBetween(String path1, String path2);
+	List<String> getPathsBetween(String path1, String path2);
 
-	String getDivergationNode(String path1, String path2);
+	String getDivergationPath(String path1, String path2);
 
 	ISubView getDivergationNode(ISubView view1, ISubView view2);
 

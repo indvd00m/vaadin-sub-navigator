@@ -43,10 +43,10 @@ public class Level2DynamicContainer3 extends VerticalLayout implements ISubDynam
 	}
 
 	@Override
-	public ISubView createView(String viewName) {
-		if (!viewName.matches("\\d+"))
+	public ISubView createView(String viewPathAndParameters) {
+		if (!viewPathAndParameters.matches("\\d+"))
 			return null;
-		AnotherContainer view = new AnotherContainer(viewName);
+		AnotherContainer view = new AnotherContainer(viewPathAndParameters);
 		return view;
 	}
 
@@ -93,7 +93,7 @@ public class Level2DynamicContainer3 extends VerticalLayout implements ISubDynam
 	}
 
 	@Override
-	public String getViewName() {
+	public String getRelativePath() {
 		return viewName;
 	}
 
