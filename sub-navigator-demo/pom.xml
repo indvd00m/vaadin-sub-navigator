@@ -5,7 +5,7 @@
 	<groupId>com.indvd00m.vaadin</groupId>
 	<artifactId>sub-navigator-demo</artifactId>
 	<packaging>war</packaging>
-	<version>0.8.1-SNAPSHOT</version>
+	<version>0.9.0</version>
 	<name>Vaadin SubNavigator Add-on Demo</name>
 
 	<properties>

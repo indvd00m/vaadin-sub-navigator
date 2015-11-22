@@ -15,7 +15,7 @@ Add dependency to your project:
 	<dependency>
 		<groupId>com.indvd00m.vaadin</groupId>
 		<artifactId>sub-navigator</artifactId>
-		<version>0.8.0</version>
+		<version>0.9.0</version>
 	</dependency>
 
 ## Download release
@@ -61,10 +61,13 @@ To debug project and make code modifications on the fly in the server-side, righ
 ### Version 0.8.0
 - First beta version
 
+### Version 0.9.0
+- Rework, rewrite, refactor
+
 ## Roadmap
 
 This component is developed as a hobby with no public roadmap or any guarantees of upcoming releases. That said, the following features are planned for upcoming releases:
-- ...
+- Hierarchical page title
 - ...
 
 ## Issue tracking
@@ -85,4 +88,4 @@ Contributions are welcome, but there are no guarantees that they are accepted as
 
 Add-on is distributed under Apache License 2.0. For license terms, see LICENSE.txt.
 
-SubNavigator is written by David E. Veliev
+SubNavigator is written by David E. Veliev.
