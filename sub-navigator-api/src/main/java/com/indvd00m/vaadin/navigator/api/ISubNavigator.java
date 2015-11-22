@@ -85,4 +85,8 @@ public interface ISubNavigator {
 
 	ISubView getDivergationNode(ISubView view1, ISubView view2);
 
+	void setDelimiter(String delimiter);
+
+	String getDelimiter();
+
 }

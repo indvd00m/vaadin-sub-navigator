@@ -24,8 +24,9 @@ public class TestHierarchyDirection {
 		UI ui = mock(UI.class);
 		Page page = mock(Page.class);
 		when(ui.getPage()).thenReturn(page);
-		ISubContainer rootContainer = mock(ISubContainer.class);
-		ISubNavigator subNavigator = new SubNavigator(ui, rootContainer);
+		ISubContainer root = mock(ISubContainer.class);
+		when(root.getRelativePath()).thenReturn("");
+		ISubNavigator subNavigator = new SubNavigator(ui, root);
 
 		assertEquals(HierarchyDirection.None, subNavigator.getDirection("/test1/test2/", "test1/test2"));
 		assertEquals(HierarchyDirection.Up, subNavigator.getDirection("/test1/test2/test3/", "test1/test2"));
