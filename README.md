@@ -2,6 +2,10 @@
 
 SubNavigator is a server side add-on for Vaadin 7.
 
+## Online demo
+
+Try the add-on demo at <http://indvd00m.com/sub-navigator-demo>
+
 ## Using
 Add maven repository to your POM:
 
@@ -30,7 +34,7 @@ mvn clean install
 cd sub-navigator-demo
 mvn jetty:run
 ```
-To see the demo, navigate to http://localhost:8080/
+To see the demo, navigate to <http://localhost:8080/>
 
 ## Development with Eclipse IDE
 
