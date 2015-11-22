@@ -129,13 +129,12 @@ public class AnotherContainer extends VerticalLayout implements ISubContainer {
 		});
 		addComponent(b4);
 
-		b5 = new Button("Button 5 (navigator selecting)");
+		b5 = new Button("Button 5 (sub-navigator selecting)");
 		b5.addClickListener(new ClickListener() {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				String path = subNavigator.getPath(v5);
-				getUI().getNavigator().navigateTo(path);
+				subNavigator.setSelected(v5);
 			}
 
 		});
