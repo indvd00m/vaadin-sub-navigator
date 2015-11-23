@@ -7,6 +7,6 @@ package com.indvd00m.vaadin.navigator.api.event;
  */
 public interface IViewStatusChangeListener {
 
-	void viewStatusChanged(IVIewStatusChangeEvent event);
+	void viewStatusChanged(IViewStatusChangeEvent event);
 
 }

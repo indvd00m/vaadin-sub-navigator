@@ -3,7 +3,7 @@ package com.indvd00m.vaadin.navigator.event;
 import java.util.Date;
 import java.util.List;
 
-import com.indvd00m.vaadin.navigator.api.event.IVIewStatusChangeEvent;
+import com.indvd00m.vaadin.navigator.api.event.IViewStatusChangeEvent;
 import com.indvd00m.vaadin.navigator.api.view.ISubView;
 import com.indvd00m.vaadin.navigator.api.view.ViewStatus;
 
@@ -12,7 +12,7 @@ import com.indvd00m.vaadin.navigator.api.view.ViewStatus;
  * @date Nov 17, 2015 12:59:27 AM
  *
  */
-public class ViewStatusChangeEvent implements IVIewStatusChangeEvent {
+public class ViewStatusChangeEvent implements IViewStatusChangeEvent {
 
 	ISubView view;
 	ViewStatus prevStatus;

@@ -10,7 +10,7 @@ import com.indvd00m.vaadin.demo.views.DynamicContainer2;
 import com.indvd00m.vaadin.demo.views.DynamicContainer3;
 import com.indvd00m.vaadin.demo.views.TabContainer1;
 import com.indvd00m.vaadin.navigator.api.ISubNavigator;
-import com.indvd00m.vaadin.navigator.api.event.IVIewStatusChangeEvent;
+import com.indvd00m.vaadin.navigator.api.event.IViewStatusChangeEvent;
 import com.indvd00m.vaadin.navigator.api.event.IViewStatusChangeListener;
 import com.indvd00m.vaadin.navigator.api.view.ISubContainer;
 import com.indvd00m.vaadin.navigator.api.view.ISubView;
@@ -43,7 +43,7 @@ public class DemoContainer extends VerticalLayout implements ISubContainer, IVie
 
 	ISubNavigator subNavigator;
 
-	List<IVIewStatusChangeEvent> eventsBeforeBuild = new ArrayList<IVIewStatusChangeEvent>();
+	List<IViewStatusChangeEvent> eventsBeforeBuild = new ArrayList<IViewStatusChangeEvent>();
 	StringBuffer log = new StringBuffer();
 	Label logLabel;
 	Panel logPanel;
@@ -110,7 +110,7 @@ public class DemoContainer extends VerticalLayout implements ISubContainer, IVie
 		setExpandRatio(logPanel, 1f);
 		logPanel.setScrollTop(Integer.MAX_VALUE);
 
-		for (IVIewStatusChangeEvent event : eventsBeforeBuild) {
+		for (IViewStatusChangeEvent event : eventsBeforeBuild) {
 			viewStatusChanged(event);
 		}
 		synchronized (this) {
@@ -132,7 +132,7 @@ public class DemoContainer extends VerticalLayout implements ISubContainer, IVie
 	}
 
 	@Override
-	public void viewStatusChanged(IVIewStatusChangeEvent event) {
+	public void viewStatusChanged(IViewStatusChangeEvent event) {
 		if (logLabel != null && logPanel != null) {
 			logCount++;
 			ISubView view = event.getView();

@@ -3,7 +3,7 @@ package com.indvd00m.vaadin.navigator.status;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.indvd00m.vaadin.navigator.api.event.IVIewStatusChangeEvent;
+import com.indvd00m.vaadin.navigator.api.event.IViewStatusChangeEvent;
 import com.indvd00m.vaadin.navigator.api.event.IViewStatusChangeListener;
 
 /**
@@ -16,7 +16,7 @@ public class ViewStatusDispatcher implements IViewStatusChangeListener {
 	List<IViewStatusChangeListener> listeners = new ArrayList<IViewStatusChangeListener>();
 
 	@Override
-	public void viewStatusChanged(IVIewStatusChangeEvent event) {
+	public void viewStatusChanged(IViewStatusChangeEvent event) {
 		for (IViewStatusChangeListener listener : listeners)
 			listener.viewStatusChanged(event);
 	}

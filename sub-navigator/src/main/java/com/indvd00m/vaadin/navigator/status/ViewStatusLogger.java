@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.indvd00m.vaadin.navigator.api.ISubNavigator;
-import com.indvd00m.vaadin.navigator.api.event.IVIewStatusChangeEvent;
+import com.indvd00m.vaadin.navigator.api.event.IViewStatusChangeEvent;
 import com.indvd00m.vaadin.navigator.api.event.IViewStatusChangeListener;
 import com.indvd00m.vaadin.navigator.api.view.ISubView;
 import com.indvd00m.vaadin.navigator.api.view.ViewStatus;
@@ -24,7 +24,7 @@ public class ViewStatusLogger implements IViewStatusChangeListener {
 	}
 
 	@Override
-	public void viewStatusChanged(IVIewStatusChangeEvent event) {
+	public void viewStatusChanged(IViewStatusChangeEvent event) {
 		if (subNavigator.isDebug()) {
 			ISubView view = event.getView();
 			ViewStatus viewStatus = event.getCurrentStatus();

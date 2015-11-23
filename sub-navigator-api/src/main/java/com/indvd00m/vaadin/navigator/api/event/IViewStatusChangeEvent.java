@@ -11,7 +11,7 @@ import com.indvd00m.vaadin.navigator.api.view.ViewStatus;
  * @date Nov 19, 2015 2:31:10 PM
  *
  */
-public interface IVIewStatusChangeEvent {
+public interface IViewStatusChangeEvent {
 
 	ISubView getView();
 

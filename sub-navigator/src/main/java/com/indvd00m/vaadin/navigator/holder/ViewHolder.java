@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.indvd00m.vaadin.navigator.api.event.IVIewStatusChangeEvent;
+import com.indvd00m.vaadin.navigator.api.event.IViewStatusChangeEvent;
 import com.indvd00m.vaadin.navigator.api.event.IViewStatusChangeListener;
 import com.indvd00m.vaadin.navigator.api.view.ISubContainer;
 import com.indvd00m.vaadin.navigator.api.view.ISubView;
@@ -66,7 +66,7 @@ public class ViewHolder implements View, AttachListener, DetachListener {
 		ViewStatus prevStatus = this.viewStatus;
 		this.viewStatus = viewStatus;
 		statusHistory.add(viewStatus);
-		IVIewStatusChangeEvent event = new ViewStatusChangeEvent(view, prevStatus, viewStatus, Collections.unmodifiableList(statusHistory));
+		IViewStatusChangeEvent event = new ViewStatusChangeEvent(view, prevStatus, viewStatus, Collections.unmodifiableList(statusHistory));
 		for (IViewStatusChangeListener listener : statusListeners) {
 			listener.viewStatusChanged(event);
 		}
