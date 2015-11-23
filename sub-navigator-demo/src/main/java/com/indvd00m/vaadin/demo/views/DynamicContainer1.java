@@ -1,9 +1,9 @@
 package com.indvd00m.vaadin.demo.views;
 
 import com.indvd00m.vaadin.demo.SubNavigatorUI;
-import com.indvd00m.vaadin.navigator.api.ISubDynamicContainer;
 import com.indvd00m.vaadin.navigator.api.ISubNavigator;
-import com.indvd00m.vaadin.navigator.api.ISubView;
+import com.indvd00m.vaadin.navigator.api.view.ISubDynamicContainer;
+import com.indvd00m.vaadin.navigator.api.view.ISubView;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.Button;

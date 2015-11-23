@@ -1,4 +1,4 @@
-package com.indvd00m.vaadin.navigator.api;
+package com.indvd00m.vaadin.navigator.api.view;
 
 import com.vaadin.ui.Component;
 

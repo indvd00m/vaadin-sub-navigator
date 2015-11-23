@@ -1,6 +1,6 @@
 package com.indvd00m.vaadin.demo;
 
-import com.indvd00m.vaadin.navigator.api.ISubView;
+import com.indvd00m.vaadin.navigator.api.view.ISubView;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Label;

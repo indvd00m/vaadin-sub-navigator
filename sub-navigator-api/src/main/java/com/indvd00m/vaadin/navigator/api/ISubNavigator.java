@@ -3,6 +3,9 @@ package com.indvd00m.vaadin.navigator.api;
 import java.util.List;
 
 import com.indvd00m.vaadin.navigator.api.event.IViewStatusChangeListener;
+import com.indvd00m.vaadin.navigator.api.view.ISubContainer;
+import com.indvd00m.vaadin.navigator.api.view.ISubView;
+import com.indvd00m.vaadin.navigator.api.view.ViewStatus;
 import com.vaadin.navigator.NavigationStateManager;
 import com.vaadin.navigator.Navigator;
 

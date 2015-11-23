@@ -3,9 +3,9 @@ package com.indvd00m.vaadin.demo.views;
 import java.util.List;
 
 import com.indvd00m.vaadin.demo.SubNavigatorUI;
-import com.indvd00m.vaadin.navigator.api.ISubContainer;
 import com.indvd00m.vaadin.navigator.api.ISubNavigator;
-import com.indvd00m.vaadin.navigator.api.ISubView;
+import com.indvd00m.vaadin.navigator.api.view.ISubContainer;
+import com.indvd00m.vaadin.navigator.api.view.ISubView;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;

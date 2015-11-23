@@ -1,9 +1,9 @@
 package com.indvd00m.vaadin.demo.views;
 
 import com.indvd00m.vaadin.demo.SubNavigatorUI;
-import com.indvd00m.vaadin.navigator.api.ISubContainer;
 import com.indvd00m.vaadin.navigator.api.ISubNavigator;
-import com.indvd00m.vaadin.navigator.api.ISubView;
+import com.indvd00m.vaadin.navigator.api.view.ISubContainer;
+import com.indvd00m.vaadin.navigator.api.view.ISubView;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;

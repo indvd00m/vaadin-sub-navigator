@@ -8,13 +8,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.indvd00m.vaadin.navigator.api.HierarchyDirection;
-import com.indvd00m.vaadin.navigator.api.ISubContainer;
-import com.indvd00m.vaadin.navigator.api.ISubDynamicContainer;
-import com.indvd00m.vaadin.navigator.api.ISubErrorContainer;
 import com.indvd00m.vaadin.navigator.api.ISubNavigator;
-import com.indvd00m.vaadin.navigator.api.ISubView;
-import com.indvd00m.vaadin.navigator.api.ViewStatus;
 import com.indvd00m.vaadin.navigator.api.event.IViewStatusChangeListener;
+import com.indvd00m.vaadin.navigator.api.view.ISubContainer;
+import com.indvd00m.vaadin.navigator.api.view.ISubDynamicContainer;
+import com.indvd00m.vaadin.navigator.api.view.ISubErrorContainer;
+import com.indvd00m.vaadin.navigator.api.view.ISubView;
+import com.indvd00m.vaadin.navigator.api.view.ViewStatus;
 import com.indvd00m.vaadin.navigator.holder.ContainerHolder;
 import com.indvd00m.vaadin.navigator.holder.DynamicContainerHolder;
 import com.indvd00m.vaadin.navigator.holder.ErrorContainerHolder;

@@ -1,7 +1,7 @@
 package com.indvd00m.vaadin.navigator.holder;
 
-import com.indvd00m.vaadin.navigator.api.ISubErrorContainer;
-import com.indvd00m.vaadin.navigator.api.ISubView;
+import com.indvd00m.vaadin.navigator.api.view.ISubErrorContainer;
+import com.indvd00m.vaadin.navigator.api.view.ISubView;
 
 /**
  * @author indvd00m (gotoindvdum[at]gmail[dot]com)

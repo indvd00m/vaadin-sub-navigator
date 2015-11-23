@@ -3,9 +3,9 @@ package com.indvd00m.vaadin.demo;
 import javax.servlet.annotation.WebServlet;
 
 import com.indvd00m.vaadin.navigator.SubNavigator;
-import com.indvd00m.vaadin.navigator.api.ISubErrorContainer;
 import com.indvd00m.vaadin.navigator.api.ISubNavigator;
-import com.indvd00m.vaadin.navigator.api.ISubView;
+import com.indvd00m.vaadin.navigator.api.view.ISubErrorContainer;
+import com.indvd00m.vaadin.navigator.api.view.ISubView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;

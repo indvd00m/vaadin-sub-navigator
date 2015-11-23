@@ -1,6 +1,6 @@
 package com.indvd00m.vaadin.navigator;
 
-import com.indvd00m.vaadin.navigator.api.ISubContainer;
+import com.indvd00m.vaadin.navigator.api.view.ISubContainer;
 import com.indvd00m.vaadin.navigator.holder.ContainerHolder;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewProvider;

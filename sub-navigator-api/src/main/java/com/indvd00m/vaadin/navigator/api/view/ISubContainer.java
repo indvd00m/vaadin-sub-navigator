@@ -1,4 +1,4 @@
-package com.indvd00m.vaadin.navigator.api;
+package com.indvd00m.vaadin.navigator.api.view;
 
 /**
  * @author indvd00m (gotoindvdum[at]gmail[dot]com)

@@ -1,6 +1,6 @@
 package com.indvd00m.vaadin.demo.views;
 
-import com.indvd00m.vaadin.navigator.api.ISubView;
+import com.indvd00m.vaadin.navigator.api.view.ISubView;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 

@@ -7,8 +7,8 @@ import org.junit.Test;
 
 import com.indvd00m.vaadin.navigator.SubNavigator;
 import com.indvd00m.vaadin.navigator.api.HierarchyDirection;
-import com.indvd00m.vaadin.navigator.api.ISubContainer;
 import com.indvd00m.vaadin.navigator.api.ISubNavigator;
+import com.indvd00m.vaadin.navigator.api.view.ISubContainer;
 import com.vaadin.server.Page;
 import com.vaadin.ui.UI;
 

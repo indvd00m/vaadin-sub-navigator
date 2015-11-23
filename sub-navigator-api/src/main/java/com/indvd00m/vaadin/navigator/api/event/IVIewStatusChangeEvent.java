@@ -3,8 +3,8 @@ package com.indvd00m.vaadin.navigator.api.event;
 import java.util.Date;
 import java.util.List;
 
-import com.indvd00m.vaadin.navigator.api.ISubView;
-import com.indvd00m.vaadin.navigator.api.ViewStatus;
+import com.indvd00m.vaadin.navigator.api.view.ISubView;
+import com.indvd00m.vaadin.navigator.api.view.ViewStatus;
 
 /**
  * @author indvd00m (gotoindvdum[at]gmail[dot]com)

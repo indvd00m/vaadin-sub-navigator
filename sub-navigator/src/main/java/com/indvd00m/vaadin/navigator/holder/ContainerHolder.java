@@ -3,9 +3,9 @@ package com.indvd00m.vaadin.navigator.holder;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.indvd00m.vaadin.navigator.api.ISubContainer;
-import com.indvd00m.vaadin.navigator.api.ISubView;
-import com.indvd00m.vaadin.navigator.api.ViewStatus;
+import com.indvd00m.vaadin.navigator.api.view.ISubContainer;
+import com.indvd00m.vaadin.navigator.api.view.ISubView;
+import com.indvd00m.vaadin.navigator.api.view.ViewStatus;
 
 /**
  * @author indvd00m (gotoindvdum[at]gmail[dot]com)
