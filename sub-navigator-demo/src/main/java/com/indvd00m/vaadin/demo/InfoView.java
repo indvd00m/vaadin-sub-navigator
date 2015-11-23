@@ -2,6 +2,7 @@ package com.indvd00m.vaadin.demo;
 
 import java.util.List;
 
+import com.indvd00m.vaadin.demo.version.ServerVersion;
 import com.indvd00m.vaadin.navigator.api.ISubContainer;
 import com.indvd00m.vaadin.navigator.api.ISubNavigator;
 import com.indvd00m.vaadin.navigator.api.ISubView;
@@ -47,9 +48,16 @@ public class InfoView extends VerticalLayout implements ISubView {
 		setComponentAlignment(vl, Alignment.MIDDLE_CENTER);
 
 		String info = "SubNavigator Add-on for Vaadin 7";
-		Label label = new Label(info);
-		vl.addComponent(label);
-		vl.setComponentAlignment(label, Alignment.MIDDLE_CENTER);
+		Label infoLabel = new Label(info);
+		infoLabel.setSizeUndefined();
+		vl.addComponent(infoLabel);
+		vl.setComponentAlignment(infoLabel, Alignment.MIDDLE_CENTER);
+
+		String version = "Version " + ServerVersion.getVersion();
+		Label versionLabel = new Label(version);
+		versionLabel.setSizeUndefined();
+		vl.addComponent(versionLabel);
+		vl.setComponentAlignment(versionLabel, Alignment.MIDDLE_CENTER);
 
 		ISubContainer root = subNavigator.getRoot();
 		List<ISubView> subViews = subNavigator.getSubViews(root);

@@ -24,7 +24,6 @@ import com.vaadin.ui.UI;
 public class SubNavigatorUI extends UI implements ISubContainer {
 
 	// TODO: error page
-	// TODO: show demo version
 
 	ISubNavigator subNavigator;
 
