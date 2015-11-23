@@ -5,7 +5,7 @@
 	<groupId>com.indvd00m.vaadin</groupId>
 	<artifactId>sub-navigator</artifactId>
 	<packaging>jar</packaging>
-	<version>0.9.1-SNAPSHOT</version>
+	<version>0.9.1</version>
 	<name>Vaadin SubNavigator Add-on</name>
 
 	<properties>

@@ -19,7 +19,7 @@ Add dependency to your project:
 	<dependency>
 		<groupId>com.indvd00m.vaadin</groupId>
 		<artifactId>sub-navigator</artifactId>
-		<version>0.9.0</version>
+		<version>0.9.1</version>
 	</dependency>
 
 ## Download release
@@ -63,10 +63,13 @@ To debug project and make code modifications on the fly in the server-side, righ
 ## Release notes
 
 ### Version 0.8.0
-- First beta version
+- First beta version.
 
 ### Version 0.9.0
-- Rework, rewrite, refactor
+- Rework, rewrite, refactor.
+
+### Version 0.9.1
+- Now there is no need for extra NPE checks in sub-views.
 
 ## Roadmap
 
