@@ -21,10 +21,10 @@ import com.vaadin.ui.UI;
 @SuppressWarnings("serial")
 public class SubNavigatorUI extends UI {
 	
-	// TODO: status history as description
 	// TODO: main view with info
 	// TODO: error page
 	// TODO: link to unknown url
+	// TODO: show demo version
 
 	ISubNavigator subNavigator;
 

@@ -65,7 +65,7 @@ public class ViewHolder implements View, AttachListener, DetachListener {
 		ViewStatus prevStatus = this.viewStatus;
 		this.viewStatus = viewStatus;
 		statusHistory.add(viewStatus);
-		IVIewStatusChangeEvent event = new ViewStatusChangeEvent(view, prevStatus, viewStatus);
+		IVIewStatusChangeEvent event = new ViewStatusChangeEvent(view, prevStatus, viewStatus, Collections.unmodifiableList(statusHistory));
 		for (IViewStatusChangeListener listener : statusListeners) {
 			listener.viewStatusChanged(event);
 		}

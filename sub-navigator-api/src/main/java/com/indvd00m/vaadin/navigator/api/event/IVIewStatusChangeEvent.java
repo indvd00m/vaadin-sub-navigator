@@ -1,6 +1,7 @@
 package com.indvd00m.vaadin.navigator.api.event;
 
 import java.util.Date;
+import java.util.List;
 
 import com.indvd00m.vaadin.navigator.api.ISubView;
 import com.indvd00m.vaadin.navigator.api.ViewStatus;
@@ -17,6 +18,8 @@ public interface IVIewStatusChangeEvent {
 	ViewStatus getPrevStatus();
 
 	ViewStatus getCurrentStatus();
+
+	List<ViewStatus> getStatusHistory();
 
 	Date getEventDate();
 

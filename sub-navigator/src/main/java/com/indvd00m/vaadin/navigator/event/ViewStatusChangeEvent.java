@@ -1,6 +1,7 @@
 package com.indvd00m.vaadin.navigator.event;
 
 import java.util.Date;
+import java.util.List;
 
 import com.indvd00m.vaadin.navigator.api.ISubView;
 import com.indvd00m.vaadin.navigator.api.ViewStatus;
@@ -16,13 +17,15 @@ public class ViewStatusChangeEvent implements IVIewStatusChangeEvent {
 	ISubView view;
 	ViewStatus prevStatus;
 	ViewStatus currentStatus;
+	List<ViewStatus> statusHistory;
 	Date eventDate;
 
-	public ViewStatusChangeEvent(ISubView view, ViewStatus prevStatus, ViewStatus currentStatus) {
+	public ViewStatusChangeEvent(ISubView view, ViewStatus prevStatus, ViewStatus currentStatus, List<ViewStatus> statusHistory) {
 		super();
 		this.view = view;
 		this.prevStatus = prevStatus;
 		this.currentStatus = currentStatus;
+		this.statusHistory = statusHistory;
 		eventDate = new Date();
 	}
 
@@ -39,6 +42,11 @@ public class ViewStatusChangeEvent implements IVIewStatusChangeEvent {
 	@Override
 	public ViewStatus getCurrentStatus() {
 		return currentStatus;
+	}
+
+	@Override
+	public List<ViewStatus> getStatusHistory() {
+		return statusHistory;
 	}
 
 	@Override

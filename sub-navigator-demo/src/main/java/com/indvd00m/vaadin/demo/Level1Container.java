@@ -7,12 +7,14 @@ import java.util.List;
 import com.indvd00m.vaadin.navigator.api.ISubContainer;
 import com.indvd00m.vaadin.navigator.api.ISubNavigator;
 import com.indvd00m.vaadin.navigator.api.ISubView;
+import com.indvd00m.vaadin.navigator.api.ViewStatus;
 import com.indvd00m.vaadin.navigator.api.event.IVIewStatusChangeEvent;
 import com.indvd00m.vaadin.navigator.api.event.IViewStatusChangeListener;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -126,13 +128,22 @@ public class Level1Container extends VerticalLayout implements ISubContainer, IV
 	public void viewStatusChanged(IVIewStatusChangeEvent event) {
 		if (logLabel != null && logPanel != null) {
 			logCount++;
+			ISubView view = event.getView();
 			String date = sdf.format(event.getEventDate());
-			String path = subNavigator.getPath(event.getView());
+			String path = subNavigator.getPath(view);
 			String status = event.getCurrentStatus().name();
 			String text = String.format("%04d. %s %s: %s\n", logCount, date, path, status);
 			log.append(text);
 			logLabel.setValue(log.toString());
 			logPanel.setScrollTop(Integer.MAX_VALUE);
+
+			if (view instanceof AbstractComponent) {
+				AbstractComponent component = (AbstractComponent) view;
+				List<ViewStatus> statusHistory = event.getStatusHistory();
+				String viewPath = subNavigator.getPath(view);
+				String history = String.format("Status history for view at \"%s\": %s", viewPath, statusHistory.toString());
+				component.setDescription(history);
+			}
 		} else {
 			eventsBeforeBuild.add(event);
 		}
