@@ -267,10 +267,7 @@ public class SubNavigator implements ISubNavigator {
 		Collections.reverse(toCleanPath);
 
 		for (ISubView view : toCleanPath) {
-			ViewHolder holder = getHolder(view);
-			if (!holder.isCleaned()) {
-				clean(view);
-			}
+			clean(view);
 		}
 
 		for (ISubView view : toRebuildPath) {

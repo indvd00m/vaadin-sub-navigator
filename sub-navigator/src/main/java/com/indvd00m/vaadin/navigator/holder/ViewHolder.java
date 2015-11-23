@@ -39,15 +39,17 @@ public class ViewHolder implements View, AttachListener, DetachListener {
 	}
 
 	public void clean() {
-		if (isBuiltAtLeastOnce()) {
+		if (isBuilt()) {
 			view.clean();
 			setViewStatus(ViewStatus.Cleaned);
 		}
 	}
 
 	public void build() {
-		view.build();
-		setViewStatus(ViewStatus.Built);
+		if (!isBuiltAtLeastOnce() || isCleaned()) {
+			view.build();
+			setViewStatus(ViewStatus.Built);
+		}
 	}
 
 	@Override
