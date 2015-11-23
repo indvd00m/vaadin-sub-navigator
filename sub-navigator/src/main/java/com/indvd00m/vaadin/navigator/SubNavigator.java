@@ -360,16 +360,12 @@ public class SubNavigator implements ISubNavigator {
 
 	protected void clean(ISubView view) {
 		ViewHolder holder = getHolder(view);
-		if (holder.isBuiltAtLeastOnce()) {
-			view.clean();
-			holder.setViewStatus(ViewStatus.Cleaned);
-		}
+		holder.clean();
 	}
 
 	protected void build(ISubView view) {
 		ViewHolder holder = getHolder(view);
-		view.build();
-		holder.setViewStatus(ViewStatus.Built);
+		holder.build();
 	}
 
 	@Override

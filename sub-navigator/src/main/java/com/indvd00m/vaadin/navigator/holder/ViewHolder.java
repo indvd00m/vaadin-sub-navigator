@@ -38,6 +38,18 @@ public class ViewHolder implements View, AttachListener, DetachListener {
 		view.addDetachListener(this);
 	}
 
+	public void clean() {
+		if (isBuiltAtLeastOnce()) {
+			view.clean();
+			setViewStatus(ViewStatus.Cleaned);
+		}
+	}
+
+	public void build() {
+		view.build();
+		setViewStatus(ViewStatus.Built);
+	}
+
 	@Override
 	public void enter(ViewChangeEvent event) {
 
@@ -79,7 +91,7 @@ public class ViewHolder implements View, AttachListener, DetachListener {
 	public void removeViewStatusChangeListener(IViewStatusChangeListener listener) {
 		statusListeners.remove(listener);
 	}
-	
+
 	public void removeAllViewStatusChangeListeners() {
 		statusListeners.clear();
 	}
