@@ -12,13 +12,13 @@ import com.vaadin.navigator.Navigator;
  */
 public interface ISubNavigator {
 
-	void addView(ISubContainer container, ISubView view);
+	boolean addView(ISubContainer container, ISubView view);
 
 	boolean contains(ISubView view);
 
-	void removeView(ISubContainer container);
+	boolean removeView(ISubContainer container);
 
-	void removeView(ISubView view);
+	boolean removeView(ISubView view);
 
 	ViewStatus getViewStatus(ISubView view);
 

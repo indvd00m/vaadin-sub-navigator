@@ -86,7 +86,7 @@ public class SubNavigator implements ISubNavigator {
 	}
 
 	@Override
-	public void addView(ISubContainer container, ISubView view) {
+	public boolean addView(ISubContainer container, ISubView view) {
 		if (container instanceof ISubDynamicContainer) {
 			ISubDynamicContainer dynamicContainer = (ISubDynamicContainer) container;
 			DynamicContainerHolder dynamicContainerHolder = getHolder(dynamicContainer);
@@ -99,10 +99,10 @@ public class SubNavigator implements ISubNavigator {
 			}
 		}
 		if (contains(container) && contains(view))
-			return;
+			return false;
 
-		boolean containerContains = addView(container);
-		boolean viewContains = addView(view);
+		boolean containerAdded = addView(container);
+		boolean viewAdded = addView(view);
 
 		ContainerHolder containerHolder = getHolder(container);
 		ViewHolder viewHolder = getHolder(view);
@@ -111,10 +111,12 @@ public class SubNavigator implements ISubNavigator {
 		String viewPath = getPath(view);
 		containerHolder.getViews().put(viewPath, view);
 
-		if (containerContains)
+		if (containerAdded)
 			setAddedStatus(container);
-		if (viewContains)
+		if (viewAdded)
 			setAddedStatus(view);
+
+		return containerAdded || viewAdded;
 	}
 
 	protected ViewHolder createHolder(ISubView view) {
@@ -129,9 +131,9 @@ public class SubNavigator implements ISubNavigator {
 	}
 
 	@Override
-	public void removeView(ISubView view) {
+	public boolean removeView(ISubView view) {
 		if (!contains(view))
-			return;
+			return false;
 
 		ViewHolder holder = getHolder(view);
 		ISubContainer container = holder.getContainer();
@@ -154,12 +156,14 @@ public class SubNavigator implements ISubNavigator {
 		holder.setViewStatus(ViewStatus.Removed);
 		holder.removeAllViewStatusChangeListeners();
 		viewHolders.remove(view);
+
+		return true;
 	}
 
 	@Override
-	public void removeView(ISubContainer container) {
+	public boolean removeView(ISubContainer container) {
 		if (!contains(container))
-			return;
+			return false;
 
 		ContainerHolder containerHolder = getHolder(container);
 		while (!containerHolder.getViews().isEmpty()) {
@@ -175,7 +179,7 @@ public class SubNavigator implements ISubNavigator {
 				removeView(subView);
 			}
 		}
-		removeView((ISubView) container);
+		return removeView((ISubView) container);
 	}
 
 	protected ViewHolder getHolder(ISubView view) {
