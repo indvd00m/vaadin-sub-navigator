@@ -4,6 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.indvd00m.vaadin.demo.views.DemoDescriptionView;
+import com.indvd00m.vaadin.demo.views.DynamicContainer1;
+import com.indvd00m.vaadin.demo.views.DynamicContainer2;
+import com.indvd00m.vaadin.demo.views.DynamicContainer3;
+import com.indvd00m.vaadin.demo.views.TabContainer1;
 import com.indvd00m.vaadin.navigator.api.ISubContainer;
 import com.indvd00m.vaadin.navigator.api.ISubNavigator;
 import com.indvd00m.vaadin.navigator.api.ISubView;
@@ -34,7 +39,7 @@ import com.vaadin.ui.VerticalLayout;
  *
  */
 @SuppressWarnings("serial")
-public class Level1Container extends VerticalLayout implements ISubContainer, IViewStatusChangeListener, SelectedTabChangeListener {
+public class DemoContainer extends VerticalLayout implements ISubContainer, IViewStatusChangeListener, SelectedTabChangeListener {
 
 	ISubNavigator subNavigator;
 
@@ -50,11 +55,13 @@ public class Level1Container extends VerticalLayout implements ISubContainer, IV
 	@Override
 	public void clean() {
 		removeAllComponents();
+		logLabel = null;
+		logPanel = null;
 	}
 
 	@Override
 	public String getRelativePath() {
-		return "level1";
+		return "demo";
 	}
 
 	@Override
@@ -64,9 +71,6 @@ public class Level1Container extends VerticalLayout implements ISubContainer, IV
 		setMargin(true);
 		setSpacing(true);
 		setSizeFull();
-
-		Label info = new Label("Try to navigate by mouse clicking, back/forward browser buttons, reloading (F5) or manual url editing.");
-		addComponent(info);
 
 		HorizontalLayout hl = new HorizontalLayout();
 		hl.setSpacing(true);
@@ -91,7 +95,7 @@ public class Level1Container extends VerticalLayout implements ISubContainer, IV
 		hl.setComponentAlignment(clearLog, Alignment.MIDDLE_CENTER);
 
 		ts = new TabSheet();
-		ts.setCaption("Level 1 container");
+		ts.setCaption("Tab container");
 		ts.setImmediate(true);
 		ts.setSizeFull();
 		addComponent(ts);
@@ -109,12 +113,15 @@ public class Level1Container extends VerticalLayout implements ISubContainer, IV
 		for (IVIewStatusChangeEvent event : eventsBeforeBuild) {
 			viewStatusChanged(event);
 		}
-		eventsBeforeBuild.clear();
+		synchronized (this) {
+			eventsBeforeBuild.clear();
+		}
 
-		addView(new Level2Container1(), "Level 2 container 1", FontAwesome.LEVEL_UP);
-		addView(new Level2DynamicContainer1(), "Level 2 dynamic container 1", FontAwesome.LEVEL_DOWN);
-		addView(new Level2DynamicContainer2(), "Level 2 dynamic container 2", FontAwesome.ALIGN_LEFT);
-		addView(new Level2DynamicContainer3(), "Level 2 dynamic container 3", FontAwesome.BAN);
+		addView(new DemoDescriptionView(), "Description", FontAwesome.INFO);
+		addView(new TabContainer1(), "Container 1", FontAwesome.LEVEL_UP);
+		addView(new DynamicContainer1(), "Dynamic container 1", FontAwesome.LEVEL_DOWN);
+		addView(new DynamicContainer2(), "Dynamic container 2", FontAwesome.ALIGN_LEFT);
+		addView(new DynamicContainer3(), "Dynamic container 3", FontAwesome.BAN);
 
 		ts.addSelectedTabChangeListener(this);
 	}
@@ -132,7 +139,7 @@ public class Level1Container extends VerticalLayout implements ISubContainer, IV
 			String date = sdf.format(event.getEventDate());
 			String path = subNavigator.getPath(view);
 			String status = event.getCurrentStatus().name();
-			String text = String.format("%04d. %s %s: %s\n", logCount, date, path, status);
+			String text = String.format("%04d. %s \"%s\": %s\n", logCount, date, path, status);
 			log.append(text);
 			logLabel.setValue(log.toString());
 			logPanel.setScrollTop(Integer.MAX_VALUE);
@@ -145,13 +152,10 @@ public class Level1Container extends VerticalLayout implements ISubContainer, IV
 				component.setDescription(history);
 			}
 		} else {
-			eventsBeforeBuild.add(event);
+			synchronized (this) {
+				eventsBeforeBuild.add(event);
+			}
 		}
-	}
-
-	@Override
-	public void detach() {
-		subNavigator.removeViewStatusChangeListener(this);
 	}
 
 	@Override

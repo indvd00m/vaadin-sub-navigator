@@ -1,5 +1,6 @@
-package com.indvd00m.vaadin.demo;
+package com.indvd00m.vaadin.demo.views;
 
+import com.indvd00m.vaadin.demo.SubNavigatorUI;
 import com.indvd00m.vaadin.navigator.api.ISubDynamicContainer;
 import com.indvd00m.vaadin.navigator.api.ISubNavigator;
 import com.indvd00m.vaadin.navigator.api.ISubView;
@@ -22,23 +23,23 @@ import com.vaadin.ui.Window.CloseListener;
  *
  */
 @SuppressWarnings("serial")
-public class Level2DynamicContainer1 extends VerticalLayout implements ISubDynamicContainer {
+public class DynamicContainer1 extends VerticalLayout implements ISubDynamicContainer {
 
 	protected ISubNavigator subNavigator;
 	String viewName;
 	SimpleView selectedView;
 	boolean autoRemove = false;
-	Level2DynamicContainer1 thisView = this;
+	DynamicContainer1 thisView = this;
 
 	Label info;
 	TextField id;
 	Button button;
 
-	public Level2DynamicContainer1() {
-		this("dynamic-container");
+	public DynamicContainer1() {
+		this("dc1");
 	}
 
-	public Level2DynamicContainer1(String viewName) {
+	public DynamicContainer1(String viewName) {
 		this.viewName = viewName;
 	}
 

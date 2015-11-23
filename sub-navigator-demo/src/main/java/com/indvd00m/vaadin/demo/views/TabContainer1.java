@@ -1,5 +1,6 @@
-package com.indvd00m.vaadin.demo;
+package com.indvd00m.vaadin.demo.views;
 
+import com.indvd00m.vaadin.demo.SubNavigatorUI;
 import com.indvd00m.vaadin.navigator.api.ISubContainer;
 import com.indvd00m.vaadin.navigator.api.ISubNavigator;
 import com.indvd00m.vaadin.navigator.api.ISubView;
@@ -16,7 +17,7 @@ import com.vaadin.ui.VerticalLayout;
  *
  */
 @SuppressWarnings("serial")
-public class Level2Container1 extends VerticalLayout implements ISubContainer, SelectedTabChangeListener {
+public class TabContainer1 extends VerticalLayout implements ISubContainer, SelectedTabChangeListener {
 
 	protected ISubNavigator subNavigator;
 	protected Accordion accord;
@@ -28,7 +29,7 @@ public class Level2Container1 extends VerticalLayout implements ISubContainer, S
 
 	@Override
 	public String getRelativePath() {
-		return "level2";
+		return "c1";
 	}
 
 	@Override
@@ -40,14 +41,14 @@ public class Level2Container1 extends VerticalLayout implements ISubContainer, S
 		setMargin(true);
 
 		accord = new Accordion();
-		accord.setCaption("Level 2 container");
+		accord.setCaption("Tab container");
 		accord.setSizeFull();
 		accord.setImmediate(true);
 		addComponent(accord);
 		setExpandRatio(accord, 1f);
 
-		addView(new AnotherContainer("level3_1"), "Level 3 container 1", FontAwesome.ANDROID);
-		addView(new AnotherContainer("level3_2"), "Level 3 container 2", FontAwesome.APPLE);
+		addView(new AnotherContainer("tab1"), "Tab 1", FontAwesome.ANDROID);
+		addView(new AnotherContainer("tab2"), "Tab 2", FontAwesome.APPLE);
 
 		accord.addSelectedTabChangeListener(this);
 	}

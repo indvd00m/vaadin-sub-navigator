@@ -3,7 +3,9 @@ package com.indvd00m.vaadin.demo;
 import javax.servlet.annotation.WebServlet;
 
 import com.indvd00m.vaadin.navigator.SubNavigator;
+import com.indvd00m.vaadin.navigator.api.ISubContainer;
 import com.indvd00m.vaadin.navigator.api.ISubNavigator;
+import com.indvd00m.vaadin.navigator.api.ISubView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
@@ -19,14 +21,15 @@ import com.vaadin.ui.UI;
 @Theme("valo")
 @Title("SubNavigator Add-on Demo")
 @SuppressWarnings("serial")
-public class SubNavigatorUI extends UI {
-	
-	// TODO: main view with info
+public class SubNavigatorUI extends UI implements ISubContainer {
+
 	// TODO: error page
-	// TODO: link to unknown url
 	// TODO: show demo version
 
 	ISubNavigator subNavigator;
+
+	DemoContainer demoView;
+	InfoView infoView;
 
 	@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = SubNavigatorUI.class)
@@ -35,13 +38,40 @@ public class SubNavigatorUI extends UI {
 
 	@Override
 	protected void init(VaadinRequest request) {
-		Level1Container root = new Level1Container();
-		subNavigator = new SubNavigator(this, root, root, true);
-		setContent(root);
+		demoView = new DemoContainer();
+		infoView = new InfoView();
+		subNavigator = new SubNavigator(this, this, demoView, true);
+		subNavigator.addView(this, infoView);
+		subNavigator.addView(this, demoView);
 	}
 
 	public ISubNavigator getSubNavigator() {
 		return subNavigator;
+	}
+
+	@Override
+	public String getRelativePath() {
+		return "";
+	}
+
+	@Override
+	public void clean() {
+		setContent(null);
+	}
+
+	@Override
+	public void build() {
+
+	}
+
+	@Override
+	public ISubView getSelectedView() {
+		return (ISubView) getContent();
+	}
+
+	@Override
+	public void setSelectedView(ISubView view) {
+		setContent(view);
 	}
 
 }

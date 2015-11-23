@@ -3,6 +3,7 @@ package com.indvd00m.vaadin.navigator.api;
 import java.util.List;
 
 import com.indvd00m.vaadin.navigator.api.event.IViewStatusChangeListener;
+import com.vaadin.navigator.NavigationStateManager;
 import com.vaadin.navigator.Navigator;
 
 /**
@@ -47,6 +48,10 @@ public interface ISubNavigator {
 
 	String getPath(ISubView view);
 
+	String getURL(ISubView view);
+
+	String getURL(String path);
+
 	int getLevel(ISubView view);
 
 	boolean isRoot(ISubView view);
@@ -66,6 +71,8 @@ public interface ISubNavigator {
 	void removeViewStatusChangeListener(ISubView view, IViewStatusChangeListener listener);
 
 	Navigator getNavigator();
+
+	NavigationStateManager getStateManager();
 
 	List<ViewStatus> getViewStatusHistory(ISubView view);
 

@@ -1,4 +1,4 @@
-package com.indvd00m.vaadin.demo;
+package com.indvd00m.vaadin.demo.views;
 
 import com.indvd00m.vaadin.navigator.api.ISubView;
 import com.vaadin.ui.Label;

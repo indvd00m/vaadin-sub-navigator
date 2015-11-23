@@ -1,5 +1,6 @@
-package com.indvd00m.vaadin.demo;
+package com.indvd00m.vaadin.demo.views;
 
+import com.indvd00m.vaadin.demo.SubNavigatorUI;
 import com.indvd00m.vaadin.navigator.api.ISubDynamicContainer;
 import com.indvd00m.vaadin.navigator.api.ISubNavigator;
 import com.indvd00m.vaadin.navigator.api.ISubView;
@@ -22,23 +23,23 @@ import com.vaadin.ui.Window.CloseListener;
  *
  */
 @SuppressWarnings("serial")
-public class Level2DynamicContainer2 extends VerticalLayout implements ISubDynamicContainer {
+public class DynamicContainer2 extends VerticalLayout implements ISubDynamicContainer {
 
 	protected ISubNavigator subNavigator;
-	Level2DynamicContainer1 selectedView;
+	DynamicContainer1 selectedView;
 	boolean autoRemove = false;
 
 	Label info;
 	TextField id;
 	Button button;
 
-	Level2DynamicContainer2 thisView = this;
+	DynamicContainer2 thisView = this;
 
 	@Override
 	public ISubView createView(String viewPathAndParameters) {
 		if (!viewPathAndParameters.matches("\\d+"))
 			return null;
-		Level2DynamicContainer1 view = new Level2DynamicContainer1(viewPathAndParameters);
+		DynamicContainer1 view = new DynamicContainer1(viewPathAndParameters);
 		return view;
 	}
 
@@ -57,8 +58,8 @@ public class Level2DynamicContainer2 extends VerticalLayout implements ISubDynam
 				autoRemove = false;
 			}
 		}
-		if (view instanceof Level2DynamicContainer1) {
-			selectedView = (Level2DynamicContainer1) view;
+		if (view instanceof DynamicContainer1) {
+			selectedView = (DynamicContainer1) view;
 			Window window = new Window();
 			window.setModal(false);
 			window.setWidth(300, Unit.PIXELS);
@@ -86,7 +87,7 @@ public class Level2DynamicContainer2 extends VerticalLayout implements ISubDynam
 
 	@Override
 	public String getRelativePath() {
-		return "dynamic-container2";
+		return "dc2";
 	}
 
 	@Override

@@ -19,6 +19,7 @@ import com.indvd00m.vaadin.navigator.holder.DynamicContainerHolder;
 import com.indvd00m.vaadin.navigator.holder.ViewHolder;
 import com.indvd00m.vaadin.navigator.status.ViewStatusDispatcher;
 import com.indvd00m.vaadin.navigator.status.ViewStatusLogger;
+import com.vaadin.navigator.NavigationStateManager;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.Navigator.UriFragmentManager;
 import com.vaadin.navigator.View;
@@ -420,6 +421,18 @@ public class SubNavigator implements ISubNavigator {
 	}
 
 	@Override
+	public String getURL(ISubView view) {
+		String path = getPath(view);
+		return getURL(path);
+	}
+
+	@Override
+	public String getURL(String path) {
+		String url = "#!" + path;
+		return url;
+	}
+
+	@Override
 	public int getLevel(ISubView view) {
 		checkContains(view);
 		return getPathList(view).size();
@@ -758,6 +771,11 @@ public class SubNavigator implements ISubNavigator {
 	@Override
 	public Navigator getNavigator() {
 		return navigator;
+	}
+
+	@Override
+	public NavigationStateManager getStateManager() {
+		return stateManager;
 	}
 
 	@Override

@@ -33,7 +33,7 @@ public class ViewStatusLogger implements IViewStatusChangeListener {
 			String date = sdf.format(new Date());
 			String path = subNavigator.getPath(view);
 			String status = viewStatus.name();
-			System.out.println(String.format("%s %s: %s", date, path, status));
+			System.out.println(String.format("%s \"%s\": %s", date, path, status));
 		}
 	}
 
