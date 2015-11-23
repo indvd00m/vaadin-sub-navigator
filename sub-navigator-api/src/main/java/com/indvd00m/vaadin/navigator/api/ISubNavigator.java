@@ -106,4 +106,6 @@ public interface ISubNavigator {
 
 	String getDelimiter();
 
+	String getState();
+
 }

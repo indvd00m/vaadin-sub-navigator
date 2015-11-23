@@ -31,6 +31,7 @@ public class ViewHolder implements View, AttachListener, DetachListener {
 	List<ViewStatus> statusHistory = new ArrayList<ViewStatus>();
 	List<IViewStatusChangeListener> statusListeners = new ArrayList<IViewStatusChangeListener>();
 	boolean createdDynamically = false;
+	boolean errorView = false;
 
 	public ViewHolder(ISubView view) {
 		this.view = view;
@@ -142,6 +143,14 @@ public class ViewHolder implements View, AttachListener, DetachListener {
 
 	public void setCreatedDynamically(boolean createdDynamically) {
 		this.createdDynamically = createdDynamically;
+	}
+
+	public boolean isErrorView() {
+		return errorView;
+	}
+
+	public void setErrorView(boolean errorView) {
+		this.errorView = errorView;
 	}
 
 }

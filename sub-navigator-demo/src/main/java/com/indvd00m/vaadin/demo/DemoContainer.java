@@ -137,9 +137,11 @@ public class DemoContainer extends VerticalLayout implements ISubContainer, IVie
 			logCount++;
 			ISubView view = event.getView();
 			String date = sdf.format(event.getEventDate());
-			String path = subNavigator.getPath(view);
+			String viewPath = view.getRelativePath();
+			if (subNavigator.contains(view))
+				viewPath = subNavigator.getPath(view);
 			String status = event.getCurrentStatus().name();
-			String text = String.format("%04d. %s \"%s\": %s\n", logCount, date, path, status);
+			String text = String.format("%04d. %s \"%s\": %s\n", logCount, date, viewPath, status);
 			log.append(text);
 			logLabel.setValue(log.toString());
 			logPanel.setScrollTop(Integer.MAX_VALUE);
@@ -147,7 +149,6 @@ public class DemoContainer extends VerticalLayout implements ISubContainer, IVie
 			if (view instanceof AbstractComponent) {
 				AbstractComponent component = (AbstractComponent) view;
 				List<ViewStatus> statusHistory = event.getStatusHistory();
-				String viewPath = subNavigator.getPath(view);
 				String history = String.format("Status history for view at \"%s\": %s", viewPath, statusHistory.toString());
 				component.setDescription(history);
 			}

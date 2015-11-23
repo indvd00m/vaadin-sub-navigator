@@ -10,12 +10,14 @@ import java.util.Map.Entry;
 import com.indvd00m.vaadin.navigator.api.HierarchyDirection;
 import com.indvd00m.vaadin.navigator.api.ISubContainer;
 import com.indvd00m.vaadin.navigator.api.ISubDynamicContainer;
+import com.indvd00m.vaadin.navigator.api.ISubErrorContainer;
 import com.indvd00m.vaadin.navigator.api.ISubNavigator;
 import com.indvd00m.vaadin.navigator.api.ISubView;
 import com.indvd00m.vaadin.navigator.api.ViewStatus;
 import com.indvd00m.vaadin.navigator.api.event.IViewStatusChangeListener;
 import com.indvd00m.vaadin.navigator.holder.ContainerHolder;
 import com.indvd00m.vaadin.navigator.holder.DynamicContainerHolder;
+import com.indvd00m.vaadin.navigator.holder.ErrorContainerHolder;
 import com.indvd00m.vaadin.navigator.holder.ViewHolder;
 import com.indvd00m.vaadin.navigator.status.ViewStatusDispatcher;
 import com.indvd00m.vaadin.navigator.status.ViewStatusLogger;
@@ -46,6 +48,9 @@ public class SubNavigator implements ISubNavigator {
 	SubViewProvider viewProvider = new SubViewProvider(this);
 	ISubView currentView = null;
 
+	public static final String ERROR_PATH = "error";
+
+	// TODO: delete excess url's from browser history
 	// TODO: hierarchical page title
 	// TODO: deprecate double add of same view name
 
@@ -99,6 +104,17 @@ public class SubNavigator implements ISubNavigator {
 				}
 			}
 		}
+		if (container instanceof ISubErrorContainer) {
+			ISubErrorContainer errorContainer = (ISubErrorContainer) container;
+			ErrorContainerHolder errorContainerHolder = getHolder(errorContainer);
+			if (errorContainerHolder != null) {
+				for (ISubView subView : errorContainerHolder.getViews().values()) {
+					ViewHolder holder = getHolder(subView);
+					if (holder.isCreatedDynamically())
+						throw new IllegalStateException(errorContainer.getClass().getSimpleName() + " can contain only one dynamically created element!");
+				}
+			}
+		}
 		if (contains(container) && contains(view))
 			return false;
 
@@ -124,6 +140,9 @@ public class SubNavigator implements ISubNavigator {
 		if (view instanceof ISubDynamicContainer) {
 			ISubDynamicContainer dynamicContainer = (ISubDynamicContainer) view;
 			return new DynamicContainerHolder(dynamicContainer);
+		} else if (view instanceof ISubErrorContainer) {
+			ISubErrorContainer errorContainer = (ISubErrorContainer) view;
+			return new ErrorContainerHolder(errorContainer);
 		} else if (view instanceof ISubContainer) {
 			ISubContainer container = (ISubContainer) view;
 			return new ContainerHolder(container);
@@ -146,9 +165,15 @@ public class SubNavigator implements ISubNavigator {
 			holder.setContainer(null);
 			if (container instanceof ISubDynamicContainer) {
 				ISubDynamicContainer dynamicContainer = (ISubDynamicContainer) container;
-				ContainerHolder dynamicContainerHolder = containerHolder;
+				DynamicContainerHolder dynamicContainerHolder = (DynamicContainerHolder) containerHolder;
 				if (dynamicContainerHolder.getSelectedView() == view)
 					deselect(dynamicContainer);
+			}
+			if (container instanceof ISubErrorContainer) {
+				ISubErrorContainer errorContainer = (ISubErrorContainer) container;
+				ErrorContainerHolder errorContainerHolder = (ErrorContainerHolder) containerHolder;
+				if (errorContainerHolder.getSelectedView() == view)
+					deselect(errorContainer);
 			}
 		}
 
@@ -193,6 +218,10 @@ public class SubNavigator implements ISubNavigator {
 
 	protected DynamicContainerHolder getHolder(ISubDynamicContainer dynamicContainer) {
 		return (DynamicContainerHolder) viewHolders.get(dynamicContainer);
+	}
+
+	protected ErrorContainerHolder getHolder(ISubErrorContainer errorContainer) {
+		return (ErrorContainerHolder) viewHolders.get(errorContainer);
 	}
 
 	@Override
@@ -547,8 +576,11 @@ public class SubNavigator implements ISubNavigator {
 				}
 			}
 			if (isSubPath(state, viewPath)) {
-				if (!(view instanceof ISubContainer))
-					return null;
+				if (!(view instanceof ISubContainer)) {
+					// view for this state not found
+					// try to create error view
+					return getErrorView(containerHolder, state);
+				}
 				ISubContainer subContainer = (ISubContainer) view;
 				ContainerHolder subContainerHolder = getHolder(subContainer);
 				// search in next level
@@ -579,6 +611,40 @@ public class SubNavigator implements ISubNavigator {
 		}
 
 		// view for this state not found
+		// try to create error view
+		return getErrorView(containerHolder, state);
+	}
+
+	protected View getErrorView(ContainerHolder containerHolder, String state) {
+		ISubContainer container = containerHolder.getView();
+		if (container instanceof ISubErrorContainer) {
+			// this container can show errors, do it
+			ISubErrorContainer errorContainer = (ISubErrorContainer) container;
+			ErrorContainerHolder errorContainerHolder = (ErrorContainerHolder) containerHolder;
+			String viewPath = ERROR_PATH;
+			ISubView errorView = errorContainerHolder.createErrorView(viewPath, state);
+			if (errorView == null)
+				throw new IllegalStateException(String.format("ErrorContainer \"%s\" must create view \"%s\"!", getRelativePath(errorContainer), state));
+			if (!viewPath.equals(getRelativePath(errorView)))
+				throw new IllegalStateException(String.format("Name of created view \"%s\" must be \"%s\"", getRelativePath(errorView), viewPath));
+			if (errorView instanceof ISubContainer)
+				throw new IllegalStateException(String.format("ErrorContainer \"%s\" should not create containers!", getRelativePath(errorContainer)));
+			addView(errorContainer, errorView);
+			ViewHolder errorHolder = getHolder(errorView);
+			errorHolder.setCreatedDynamically(true);
+			errorHolder.setErrorView(true);
+			setSelected(errorView);
+			// return error view
+			return errorHolder;
+		} else {
+			ISubContainer superContainer = containerHolder.getContainer();
+			if (contains(superContainer)) {
+				ContainerHolder superContainerHolder = getHolder(superContainer);
+				return getErrorView(superContainerHolder, state);
+			}
+		}
+
+		// view not found and error view not generated
 		return null;
 	}
 
@@ -591,8 +657,10 @@ public class SubNavigator implements ISubNavigator {
 
 		currentView = view;
 		if (!equalsPath(selectedPath, stateManager.getState())) {
-			// set state to actual value
-			stateManager.setState(selectedPath);
+			if (!viewHolder.isErrorView()) {
+				// set state to actual value
+				stateManager.setState(selectedPath);
+			}
 		}
 		currentNavigationState = selectedPath;
 	}
@@ -661,7 +729,7 @@ public class SubNavigator implements ISubNavigator {
 		List<ISubView> path = new ArrayList<ISubView>();
 		ContainerHolder containerHolder = getHolder(container);
 		ISubView selectedView = containerHolder.getSelectedView();
-		while (selectedView != null) {
+		while (selectedView != null && contains(selectedView)) {
 			path.add(selectedView);
 			if (selectedView instanceof ISubContainer) {
 				ISubContainer subContainer = (ISubContainer) selectedView;
@@ -866,6 +934,11 @@ public class SubNavigator implements ISubNavigator {
 		checkContains(container);
 		String path = getPath(container) + delimiter + trimDelimiter(relativePath);
 		navigateTo(path);
+	}
+
+	@Override
+	public String getState() {
+		return navigator.getState();
 	}
 
 }

@@ -6,7 +6,6 @@ import com.indvd00m.vaadin.navigator.api.ISubNavigator;
 import com.indvd00m.vaadin.navigator.api.ISubView;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -110,7 +109,6 @@ public class DynamicContainer1 extends VerticalLayout implements ISubDynamicCont
 		addComponent(info);
 
 		id = new TextField("Enter object id");
-		id.setConverter(new StringToIntegerConverter());
 		id.setValue("123");
 		id.setImmediate(true);
 		id.addValueChangeListener(new ValueChangeListener() {
@@ -128,7 +126,7 @@ public class DynamicContainer1 extends VerticalLayout implements ISubDynamicCont
 			@Override
 			public void buttonClick(ClickEvent event) {
 				if (id.isValid()) {
-					String sId = id.getValue().replaceAll("\\D+", "");
+					String sId = id.getValue().replaceAll("\\s+", "");
 					subNavigator.navigateTo(thisView, sId);
 				}
 			}

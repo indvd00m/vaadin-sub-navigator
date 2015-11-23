@@ -3,7 +3,7 @@ package com.indvd00m.vaadin.demo;
 import javax.servlet.annotation.WebServlet;
 
 import com.indvd00m.vaadin.navigator.SubNavigator;
-import com.indvd00m.vaadin.navigator.api.ISubContainer;
+import com.indvd00m.vaadin.navigator.api.ISubErrorContainer;
 import com.indvd00m.vaadin.navigator.api.ISubNavigator;
 import com.indvd00m.vaadin.navigator.api.ISubView;
 import com.vaadin.annotations.Theme;
@@ -21,9 +21,7 @@ import com.vaadin.ui.UI;
 @Theme("valo")
 @Title("SubNavigator Add-on Demo")
 @SuppressWarnings("serial")
-public class SubNavigatorUI extends UI implements ISubContainer {
-
-	// TODO: error page
+public class SubNavigatorUI extends UI implements ISubErrorContainer {
 
 	ISubNavigator subNavigator;
 
@@ -71,6 +69,11 @@ public class SubNavigatorUI extends UI implements ISubContainer {
 	@Override
 	public void setSelectedView(ISubView view) {
 		setContent(view);
+	}
+
+	@Override
+	public ISubView createErrorView(String viewPath, String errorPath) {
+		return new ErrorView(viewPath, errorPath);
 	}
 
 }
