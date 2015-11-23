@@ -29,6 +29,10 @@ public interface ISubNavigator {
 	 */
 	void notifySelectedChangeDirected(ISubContainer container);
 
+	void navigateTo(String path);
+
+	void navigateTo(ISubContainer container, String relativePath);
+
 	List<ISubView> getSelectedPath(ISubContainer container);
 
 	String getSelectedPath();

@@ -195,7 +195,7 @@ public class SubNavigator implements ISubNavigator {
 		checkContains(view);
 
 		if (!processing) {
-			navigator.navigateTo(getPath(view));
+			navigateTo(getPath(view));
 		} else {
 			ViewHolder holder = getHolder(view);
 			if (!isSelected(view)) {
@@ -449,7 +449,7 @@ public class SubNavigator implements ISubNavigator {
 		String path = getPath(selectedView);
 		if (!equalsPath(currentNavigationState, path)) {
 			if (isSelected(container))
-				navigator.navigateTo(path);
+				navigateTo(path);
 		}
 	}
 
@@ -839,6 +839,18 @@ public class SubNavigator implements ISubNavigator {
 	@Override
 	public void setDelimiter(String delimiter) {
 		this.delimiter = delimiter;
+	}
+
+	@Override
+	public void navigateTo(String path) {
+		navigator.navigateTo(path);
+	}
+
+	@Override
+	public void navigateTo(ISubContainer container, String relativePath) {
+		checkContains(container);
+		String path = getPath(container) + delimiter + trimDelimiter(relativePath);
+		navigateTo(path);
 	}
 
 }

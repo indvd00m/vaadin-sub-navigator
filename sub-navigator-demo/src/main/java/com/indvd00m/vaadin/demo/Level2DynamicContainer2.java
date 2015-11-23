@@ -119,9 +119,8 @@ public class Level2DynamicContainer2 extends VerticalLayout implements ISubDynam
 			@Override
 			public void buttonClick(ClickEvent event) {
 				if (id.isValid()) {
-					String path = subNavigator.getPath(thisView);
-					path += subNavigator.getDelimiter() + id.getValue().replaceAll("\\D+", "");
-					getUI().getNavigator().navigateTo(path);
+					String sId = id.getValue().replaceAll("\\D+", "");
+					subNavigator.navigateTo(thisView, sId);
 				}
 			}
 		});
