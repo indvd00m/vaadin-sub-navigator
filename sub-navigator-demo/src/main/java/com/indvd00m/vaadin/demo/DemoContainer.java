@@ -171,6 +171,11 @@ public class DemoContainer extends VerticalLayout implements ISubContainer, ISub
 	}
 
 	@Override
+	public void deselectView(ISubView view) {
+
+	}
+
+	@Override
 	public void selectedTabChange(SelectedTabChangeEvent event) {
 		subNavigator.notifySelectedChangeDirected(this);
 	}

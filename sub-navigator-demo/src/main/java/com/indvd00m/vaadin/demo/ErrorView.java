@@ -1,5 +1,7 @@
 package com.indvd00m.vaadin.demo;
 
+import com.indvd00m.vaadin.navigator.api.ISubNavigator;
+import com.indvd00m.vaadin.navigator.api.view.ISubContainer;
 import com.indvd00m.vaadin.navigator.api.view.ISubTitled;
 import com.indvd00m.vaadin.navigator.api.view.ISubView;
 import com.vaadin.server.ExternalResource;
@@ -16,12 +18,16 @@ import com.vaadin.ui.VerticalLayout;
 @SuppressWarnings("serial")
 public class ErrorView extends VerticalLayout implements ISubView, ISubTitled {
 
+	ISubNavigator subNavigator;
+
+	String caption;
 	String viewPath;
-	String errorPath;
+	String errorMessage;
 
 	public ErrorView(String viewPath, String errorPath) {
+		this.caption = "404 Not Found";
 		this.viewPath = viewPath;
-		this.errorPath = errorPath;
+		this.errorMessage = "Path: " + errorPath;
 	}
 
 	@Override
@@ -36,6 +42,8 @@ public class ErrorView extends VerticalLayout implements ISubView, ISubTitled {
 
 	@Override
 	public void build() {
+		subNavigator = ((SubNavigatorUI) getUI()).getSubNavigator();
+
 		setSizeFull();
 		setSpacing(true);
 		setMargin(true);
@@ -47,13 +55,19 @@ public class ErrorView extends VerticalLayout implements ISubView, ISubTitled {
 		addComponent(vl);
 		setComponentAlignment(vl, Alignment.MIDDLE_CENTER);
 
-		String info = "404 Not Found";
-		Label infoLabel = new Label(info);
-		infoLabel.setSizeUndefined();
-		vl.addComponent(infoLabel);
-		vl.setComponentAlignment(infoLabel, Alignment.MIDDLE_CENTER);
+		Label captionLabel = new Label(caption);
+		captionLabel.setSizeUndefined();
+		vl.addComponent(captionLabel);
+		vl.setComponentAlignment(captionLabel, Alignment.MIDDLE_CENTER);
 
-		Label urlLabel = new Label(errorPath);
+		ISubContainer container = subNavigator.getContainer(this);
+		String containerPath = subNavigator.getPath(container);
+		Label handlerLabel = new Label("Handled by: \"" + containerPath + "\"");
+		handlerLabel.setSizeUndefined();
+		vl.addComponent(handlerLabel);
+		vl.setComponentAlignment(handlerLabel, Alignment.MIDDLE_CENTER);
+
+		Label urlLabel = new Label(errorMessage);
 		urlLabel.setSizeUndefined();
 		vl.addComponent(urlLabel);
 		vl.setComponentAlignment(urlLabel, Alignment.MIDDLE_CENTER);
@@ -65,7 +79,7 @@ public class ErrorView extends VerticalLayout implements ISubView, ISubTitled {
 
 	@Override
 	public String getRelativeTitle() {
-		return "Error page";
+		return "Error: " + caption;
 	}
 
 }

@@ -42,7 +42,7 @@ public class ContainerHolder extends ViewHolder {
 		if (isBuilt()) {
 			if (getSelectedView() != view) {
 				getView().setSelectedView(view);
-				hasSelectedValue = view != null;
+				hasSelectedValue = true;
 			}
 		} else {
 			hasSelectedValue = false;
@@ -51,6 +51,22 @@ public class ContainerHolder extends ViewHolder {
 			if (view != null)
 				viewName = view.getRelativePath();
 			throw new IllegalStateException(String.format("Trying to select view \"%s\" on container \"%s\" which not built yet", viewName, containerName));
+		}
+	}
+
+	public void deselectView(ISubView view) {
+		if (isBuilt()) {
+			if (getSelectedView() == view) {
+				getView().deselectView(view);
+				hasSelectedValue = false;
+			}
+		} else {
+			hasSelectedValue = false;
+			String containerName = getView().getRelativePath();
+			String viewName = "null";
+			if (view != null)
+				viewName = view.getRelativePath();
+			throw new IllegalStateException(String.format("Trying to deselect view \"%s\" on container \"%s\" which not built yet", viewName, containerName));
 		}
 	}
 
@@ -63,6 +79,10 @@ public class ContainerHolder extends ViewHolder {
 		if (viewStatus == ViewStatus.Cleaned)
 			hasSelectedValue = false;
 		super.setViewStatus(viewStatus);
+	}
+
+	public void setHasSelectedValue(boolean hasSelectedValue) {
+		this.hasSelectedValue = hasSelectedValue;
 	}
 
 }

@@ -49,22 +49,23 @@ public class DynamicContainer2 extends VerticalLayout implements ISubDynamicCont
 
 	@Override
 	public void setSelectedView(ISubView view) {
-		if (view == null) {
-			Window window = (Window) selectedView.getParent();
-			window.removeCloseListener(this);
-			window.close();
-			selectedView = null;
-		} else {
-			selectedView = (DynamicContainer1) view;
-			Window window = new Window();
-			window.setModal(false);
-			window.setWidth(300, Unit.PIXELS);
-			window.setHeight(500, Unit.PIXELS);
-			window.setContent(selectedView);
-			window.setCaption("Dynamically created window");
-			window.addCloseListener(this);
-			getUI().addWindow(window);
-		}
+		selectedView = (DynamicContainer1) view;
+		Window window = new Window();
+		window.setModal(false);
+		window.setWidth(300, Unit.PIXELS);
+		window.setHeight(500, Unit.PIXELS);
+		window.setContent(selectedView);
+		window.setCaption("Dynamically created window");
+		window.addCloseListener(this);
+		getUI().addWindow(window);
+	}
+
+	@Override
+	public void deselectView(ISubView view) {
+		Window window = (Window) selectedView.getParent();
+		window.removeCloseListener(this);
+		window.close();
+		selectedView = null;
 	}
 
 	@Override

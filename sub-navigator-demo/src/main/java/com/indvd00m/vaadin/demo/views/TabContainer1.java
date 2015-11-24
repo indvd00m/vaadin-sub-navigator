@@ -69,6 +69,11 @@ public class TabContainer1 extends VerticalLayout implements ISubContainer, Sele
 	}
 
 	@Override
+	public void deselectView(ISubView view) {
+
+	}
+
+	@Override
 	public void selectedTabChange(SelectedTabChangeEvent event) {
 		subNavigator.notifySelectedChangeDirected(this);
 	}

@@ -1,8 +1,10 @@
 package com.indvd00m.vaadin.demo.views;
 
+import com.indvd00m.vaadin.demo.ErrorView;
 import com.indvd00m.vaadin.demo.SubNavigatorUI;
 import com.indvd00m.vaadin.navigator.api.ISubNavigator;
 import com.indvd00m.vaadin.navigator.api.view.ISubContainer;
+import com.indvd00m.vaadin.navigator.api.view.ISubErrorContainer;
 import com.indvd00m.vaadin.navigator.api.view.ISubView;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -15,7 +17,7 @@ import com.vaadin.ui.VerticalLayout;
  *
  */
 @SuppressWarnings("serial")
-public class AnotherContainer extends VerticalLayout implements ISubContainer {
+public class AnotherContainer extends VerticalLayout implements ISubContainer, ISubErrorContainer {
 
 	ISubNavigator subNavigator;
 	String containerName = "test-containers";
@@ -38,12 +40,17 @@ public class AnotherContainer extends VerticalLayout implements ISubContainer {
 
 	@Override
 	public void setSelectedView(ISubView view) {
-		container.removeAllComponents();
 		container.addComponent(view);
 	}
 
 	@Override
+	public void deselectView(ISubView view) {
+		container.removeComponent(view);
+	}
+
+	@Override
 	public void clean() {
+		container.removeAllComponents();
 		removeAllComponents();
 	}
 
@@ -52,27 +59,15 @@ public class AnotherContainer extends VerticalLayout implements ISubContainer {
 		return containerName;
 	}
 
-	SimpleView v1;
-	SimpleView v2;
-	SimpleView v3;
-	SimpleView v4;
-	SimpleView v5;
-
-	Button b1;
-	Button b2;
-	Button b3;
-	Button b4;
-	Button b5;
-
 	@Override
 	public void build() {
 		subNavigator = ((SubNavigatorUI) getUI()).getSubNavigator();
 
-		v1 = new SimpleView("view1", "View 1");
-		v2 = new SimpleView("view2", "View 2");
-		v3 = new SimpleView("view3", "View 3");
-		v4 = new SimpleView("view4", "View 4");
-		v5 = new SimpleView("view5", "View 5");
+		final SimpleView v1 = new SimpleView("view1", "View 1");
+		final SimpleView v2 = new SimpleView("view2", "View 2");
+		final SimpleView v3 = new SimpleView("view3", "View 3");
+		final SimpleView v4 = new SimpleView("view4", "View 4");
+		final SimpleView v5 = new SimpleView("view5", "View 5");
 
 		subNavigator.addView(this, v1);
 		subNavigator.addView(this, v2);
@@ -80,11 +75,12 @@ public class AnotherContainer extends VerticalLayout implements ISubContainer {
 		subNavigator.addView(this, v4);
 		subNavigator.addView(this, v5);
 
-		b1 = new Button("Button 1 (direct selecting)");
+		Button b1 = new Button("Button 1 (direct selecting)");
 		b1.addClickListener(new ClickListener() {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
+				deselectView(getSelectedView());
 				setSelectedView(v1);
 				subNavigator.notifySelectedChangeDirected(thisView);
 			}
@@ -92,11 +88,12 @@ public class AnotherContainer extends VerticalLayout implements ISubContainer {
 		});
 		addComponent(b1);
 
-		b2 = new Button("Button 2 (direct selecting)");
+		Button b2 = new Button("Button 2 (direct selecting)");
 		b2.addClickListener(new ClickListener() {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
+				deselectView(getSelectedView());
 				setSelectedView(v2);
 				subNavigator.notifySelectedChangeDirected(thisView);
 			}
@@ -104,11 +101,12 @@ public class AnotherContainer extends VerticalLayout implements ISubContainer {
 		});
 		addComponent(b2);
 
-		b3 = new Button("Button 3 (direct selecting)");
+		Button b3 = new Button("Button 3 (direct selecting)");
 		b3.addClickListener(new ClickListener() {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
+				deselectView(getSelectedView());
 				setSelectedView(v3);
 				subNavigator.notifySelectedChangeDirected(thisView);
 			}
@@ -116,7 +114,7 @@ public class AnotherContainer extends VerticalLayout implements ISubContainer {
 		});
 		addComponent(b3);
 
-		b4 = new Button("Button 4 (navigator selecting)");
+		Button b4 = new Button("Button 4 (navigator selecting)");
 		b4.addClickListener(new ClickListener() {
 
 			@Override
@@ -128,7 +126,7 @@ public class AnotherContainer extends VerticalLayout implements ISubContainer {
 		});
 		addComponent(b4);
 
-		b5 = new Button("Button 5 (sub-navigator selecting)");
+		Button b5 = new Button("Button 5 (sub-navigator selecting)");
 		b5.addClickListener(new ClickListener() {
 
 			@Override
@@ -139,9 +137,30 @@ public class AnotherContainer extends VerticalLayout implements ISubContainer {
 		});
 		addComponent(b5);
 
+		Button b6 = new Button("Button 6 (not existed view)");
+		b6.addClickListener(new ClickListener() {
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				subNavigator.navigateTo(thisView, "this/view/not/exist");
+			}
+
+		});
+		addComponent(b6);
+
 		container = new VerticalLayout();
 		container.setSizeFull();
 		addComponent(container);
+	}
+
+	@Override
+	public ISubView createErrorView(String viewPath, String errorPath) {
+		return new ErrorView(viewPath, errorPath);
+	}
+
+	@Override
+	public ISubView createErrorView(String viewPath, Throwable t) {
+		return null;
 	}
 
 }

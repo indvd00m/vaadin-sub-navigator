@@ -1,6 +1,7 @@
 package com.indvd00m.vaadin.navigator;
 
 import com.indvd00m.vaadin.navigator.api.view.ISubContainer;
+import com.indvd00m.vaadin.navigator.api.view.ISubView;
 import com.indvd00m.vaadin.navigator.holder.ContainerHolder;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewProvider;
@@ -45,7 +46,13 @@ public class SubViewProvider implements ViewProvider {
 			subNavigator.closeDynamicallyCreatedViews(viewName);
 			ISubContainer root = subNavigator.getRoot();
 			ContainerHolder rootHolder = subNavigator.getHolder(root);
-			return subNavigator.getView(rootHolder, viewName);
+			View view = subNavigator.getView(rootHolder, viewName);
+			if (view == null) {
+				// view not found, trying to create error view
+				ISubView selected = subNavigator.getSelected();
+				view = subNavigator.getErrorView(selected, viewName);
+			}
+			return view;
 		} finally {
 			if (changed) {
 				subNavigator.processing = false;

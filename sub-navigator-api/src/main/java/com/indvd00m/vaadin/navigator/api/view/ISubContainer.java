@@ -11,4 +11,6 @@ public interface ISubContainer extends ISubView {
 
 	void setSelectedView(ISubView view);
 
+	void deselectView(ISubView view);
+
 }

@@ -74,13 +74,24 @@ public class SubNavigatorUI extends UI implements ISubErrorContainer, ISubTitled
 	}
 
 	@Override
-	public ISubView createErrorView(String viewPath, String errorPath) {
-		return new ErrorView(viewPath, errorPath);
+	public void deselectView(ISubView view) {
+		setContent(null);
 	}
 
 	@Override
 	public String getRelativeTitle() {
 		return "SubNavigator Add-on";
+	}
+
+	@Override
+	public ISubView createErrorView(String viewPath, String errorPath) {
+		return new ErrorView(viewPath, errorPath);
+	}
+
+	@Override
+	public ISubView createErrorView(String viewPath, Throwable t) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

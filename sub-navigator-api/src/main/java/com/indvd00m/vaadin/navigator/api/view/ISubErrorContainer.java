@@ -9,4 +9,6 @@ public interface ISubErrorContainer extends ISubContainer {
 
 	ISubView createErrorView(String viewPath, String errorPath);
 
+	ISubView createErrorView(String viewPath, Throwable t);
+
 }
