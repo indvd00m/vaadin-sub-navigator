@@ -506,7 +506,9 @@ public class SubNavigator implements ISubNavigator {
 		return null;
 	}
 
-	protected void closeDynamicallyCreatedViews(String state) {
+	protected ISubView closeDynamicallyCreatedViews(String state) {
+		ISubView newCurrentView = currentView;
+
 		String prevState = currentNavigationState;
 		HierarchyDirection direction = getDirection(prevState, state);
 		if (direction == HierarchyDirection.Nearby || direction == HierarchyDirection.Up) {
@@ -522,6 +524,7 @@ public class SubNavigator implements ISubNavigator {
 			for (ISubView view : oldBranch) {
 				ViewHolder holder = getHolder(view);
 				if (holder.isCreatedDynamically()) {
+					newCurrentView = holder.getContainer();
 					if (view instanceof ISubContainer) {
 						ISubContainer container = (ISubContainer) view;
 						removeView(container);
@@ -532,13 +535,16 @@ public class SubNavigator implements ISubNavigator {
 				}
 			}
 		}
+
+		return newCurrentView;
 	}
 
 	protected View findView(String state) {
 		ViewHolder holder = null;
 
 		try {
-			closeDynamicallyCreatedViews(state);
+			// updating currentView to actual state after removing dynamic views
+			currentView = closeDynamicallyCreatedViews(state);
 			ContainerHolder rootHolder = getHolder(root);
 			holder = findView(rootHolder, state);
 			if (holder != null) {
