@@ -19,7 +19,7 @@ Add dependency to your project:
 	<dependency>
 		<groupId>com.indvd00m.vaadin</groupId>
 		<artifactId>sub-navigator</artifactId>
-		<version>0.9.2</version>
+		<version>0.9.3</version>
 	</dependency>
 
 ## Download release
@@ -76,6 +76,12 @@ To debug project and make code modifications on the fly in the server-side, righ
 - Added ISubErrorContainer for error page generating.
 - Some API refactoring.
 - Demo enhancement.
+
+### Version 0.9.3
+- Hierarchical page titles.
+- Added deselectView() method for containers.
+- Now containers can handle view exceptions.
+- Fixed cleaning of dynamic containers.
 
 
 ## Roadmap
