@@ -90,8 +90,7 @@ public class SubNavigatorUI extends UI implements ISubErrorContainer, ISubTitled
 
 	@Override
 	public ISubView createErrorView(String viewPath, Throwable t) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ErrorView(viewPath, t);
 	}
 
 }

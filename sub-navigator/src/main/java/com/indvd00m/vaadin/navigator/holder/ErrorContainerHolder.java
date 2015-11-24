@@ -32,4 +32,16 @@ public class ErrorContainerHolder extends ContainerHolder {
 		return created;
 	}
 
+	public ISubView createErrorView(String viewPath, Throwable t) {
+		ISubView created = null;
+		if (isBuilt()) {
+			created = getView().createErrorView(viewPath, t);
+		} else {
+			String containerName = getView().getRelativePath();
+			throw new IllegalStateException(
+					String.format("Trying to create view \"%s\" on error container \"%s\" which not built yet", viewPath, containerName));
+		}
+		return created;
+	}
+
 }

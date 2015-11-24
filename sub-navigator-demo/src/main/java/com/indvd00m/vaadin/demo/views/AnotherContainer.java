@@ -66,14 +66,12 @@ public class AnotherContainer extends VerticalLayout implements ISubContainer, I
 		final SimpleView v1 = new SimpleView("view1", "View 1");
 		final SimpleView v2 = new SimpleView("view2", "View 2");
 		final SimpleView v3 = new SimpleView("view3", "View 3");
-		final SimpleView v4 = new SimpleView("view4", "View 4");
-		final SimpleView v5 = new SimpleView("view5", "View 5");
+		final NPEView npeView = new NPEView();
 
 		subNavigator.addView(this, v1);
 		subNavigator.addView(this, v2);
 		subNavigator.addView(this, v3);
-		subNavigator.addView(this, v4);
-		subNavigator.addView(this, v5);
+		subNavigator.addView(this, npeView);
 
 		Button b1 = new Button("Button 1 (direct selecting)");
 		b1.addClickListener(new ClickListener() {
@@ -88,57 +86,31 @@ public class AnotherContainer extends VerticalLayout implements ISubContainer, I
 		});
 		addComponent(b1);
 
-		Button b2 = new Button("Button 2 (direct selecting)");
+		Button b2 = new Button("Button 2 (navigator selecting)");
 		b2.addClickListener(new ClickListener() {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				deselectView(getSelectedView());
-				setSelectedView(v2);
-				subNavigator.notifySelectedChangeDirected(thisView);
+				String path = subNavigator.getPath(v2);
+				getUI().getNavigator().navigateTo(path);
 			}
 
 		});
 		addComponent(b2);
 
-		Button b3 = new Button("Button 3 (direct selecting)");
+		Button b3 = new Button("Button 3 (sub-navigator selecting)");
 		b3.addClickListener(new ClickListener() {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				deselectView(getSelectedView());
-				setSelectedView(v3);
-				subNavigator.notifySelectedChangeDirected(thisView);
+				subNavigator.setSelected(v3);
 			}
 
 		});
 		addComponent(b3);
 
-		Button b4 = new Button("Button 4 (navigator selecting)");
+		Button b4 = new Button("Button 4 (not existed view)");
 		b4.addClickListener(new ClickListener() {
-
-			@Override
-			public void buttonClick(ClickEvent event) {
-				String path = subNavigator.getPath(v4);
-				getUI().getNavigator().navigateTo(path);
-			}
-
-		});
-		addComponent(b4);
-
-		Button b5 = new Button("Button 5 (sub-navigator selecting)");
-		b5.addClickListener(new ClickListener() {
-
-			@Override
-			public void buttonClick(ClickEvent event) {
-				subNavigator.setSelected(v5);
-			}
-
-		});
-		addComponent(b5);
-
-		Button b6 = new Button("Button 6 (not existed view)");
-		b6.addClickListener(new ClickListener() {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -146,7 +118,18 @@ public class AnotherContainer extends VerticalLayout implements ISubContainer, I
 			}
 
 		});
-		addComponent(b6);
+		addComponent(b4);
+
+		Button b5 = new Button("Button 5 (view throw exception in build phase)");
+		b5.addClickListener(new ClickListener() {
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				subNavigator.setSelected(npeView);
+			}
+
+		});
+		addComponent(b5);
 
 		container = new VerticalLayout();
 		container.setSizeFull();

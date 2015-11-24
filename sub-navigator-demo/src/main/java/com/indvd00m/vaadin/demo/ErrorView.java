@@ -1,13 +1,17 @@
 package com.indvd00m.vaadin.demo;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import com.indvd00m.vaadin.navigator.api.ISubNavigator;
 import com.indvd00m.vaadin.navigator.api.view.ISubContainer;
 import com.indvd00m.vaadin.navigator.api.view.ISubTitled;
 import com.indvd00m.vaadin.navigator.api.view.ISubView;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -16,7 +20,7 @@ import com.vaadin.ui.VerticalLayout;
  *
  */
 @SuppressWarnings("serial")
-public class ErrorView extends VerticalLayout implements ISubView, ISubTitled {
+public class ErrorView extends Panel implements ISubView, ISubTitled {
 
 	ISubNavigator subNavigator;
 
@@ -30,6 +34,12 @@ public class ErrorView extends VerticalLayout implements ISubView, ISubTitled {
 		this.errorMessage = "Path: " + errorPath;
 	}
 
+	public ErrorView(String viewPath, Throwable t) {
+		this.caption = "500 Internal Server Error";
+		this.viewPath = viewPath;
+		this.errorMessage = ExceptionUtils.getStackTrace(t);
+	}
+
 	@Override
 	public String getRelativePath() {
 		return viewPath;
@@ -37,7 +47,7 @@ public class ErrorView extends VerticalLayout implements ISubView, ISubTitled {
 
 	@Override
 	public void clean() {
-		removeAllComponents();
+		setContent(null);
 	}
 
 	@Override
@@ -45,15 +55,12 @@ public class ErrorView extends VerticalLayout implements ISubView, ISubTitled {
 		subNavigator = ((SubNavigatorUI) getUI()).getSubNavigator();
 
 		setSizeFull();
-		setSpacing(true);
-		setMargin(true);
 
 		VerticalLayout vl = new VerticalLayout();
 		vl.setSpacing(true);
 		vl.setMargin(true);
-		vl.setSizeUndefined();
-		addComponent(vl);
-		setComponentAlignment(vl, Alignment.MIDDLE_CENTER);
+		vl.setWidth(100, Unit.PERCENTAGE);
+		setContent(vl);
 
 		Label captionLabel = new Label(caption);
 		captionLabel.setSizeUndefined();
@@ -67,14 +74,15 @@ public class ErrorView extends VerticalLayout implements ISubView, ISubTitled {
 		vl.addComponent(handlerLabel);
 		vl.setComponentAlignment(handlerLabel, Alignment.MIDDLE_CENTER);
 
-		Label urlLabel = new Label(errorMessage);
-		urlLabel.setSizeUndefined();
-		vl.addComponent(urlLabel);
-		vl.setComponentAlignment(urlLabel, Alignment.MIDDLE_CENTER);
-
 		Link link = new Link("Home", new ExternalResource("./"));
 		vl.addComponent(link);
 		vl.setComponentAlignment(link, Alignment.MIDDLE_CENTER);
+
+		Label errorLabel = new Label(errorMessage);
+		errorLabel.setContentMode(ContentMode.PREFORMATTED);
+		errorLabel.setSizeUndefined();
+		vl.addComponent(errorLabel);
+		vl.setComponentAlignment(errorLabel, Alignment.MIDDLE_CENTER);
 	}
 
 	@Override
