@@ -105,10 +105,20 @@ public interface ISubNavigator {
 
 	ISubView getDivergationNode(ISubView view1, ISubView view2);
 
-	void setDelimiter(String delimiter);
+	void setPathDelimiter(String pathDelimiter);
 
-	String getDelimiter();
+	String getPathDelimiter();
+
+	void setTitleDelimiter(String titleDelimiter);
+
+	String getTitleDelimiter();
 
 	String getState();
+
+	void setEnabledSubTitles(boolean enableSubTitles);
+
+	boolean isEnabledSubTitles();
+
+	String getSubTitle(ISubView view);
 
 }

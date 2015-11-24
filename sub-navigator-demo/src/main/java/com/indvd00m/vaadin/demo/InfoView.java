@@ -5,6 +5,7 @@ import java.util.List;
 import com.indvd00m.vaadin.demo.version.ServerVersion;
 import com.indvd00m.vaadin.navigator.api.ISubNavigator;
 import com.indvd00m.vaadin.navigator.api.view.ISubContainer;
+import com.indvd00m.vaadin.navigator.api.view.ISubTitled;
 import com.indvd00m.vaadin.navigator.api.view.ISubView;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.Alignment;
@@ -18,7 +19,7 @@ import com.vaadin.ui.VerticalLayout;
  *
  */
 @SuppressWarnings("serial")
-public class InfoView extends VerticalLayout implements ISubView {
+public class InfoView extends VerticalLayout implements ISubView, ISubTitled {
 
 	ISubNavigator subNavigator;
 
@@ -67,6 +68,11 @@ public class InfoView extends VerticalLayout implements ISubView {
 		Link link = new Link("Show demo", new ExternalResource(url));
 		vl.addComponent(link);
 		vl.setComponentAlignment(link, Alignment.MIDDLE_CENTER);
+	}
+
+	@Override
+	public String getRelativeTitle() {
+		return "Info";
 	}
 
 }

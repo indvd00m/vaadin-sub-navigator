@@ -5,6 +5,7 @@ import javax.servlet.annotation.WebServlet;
 import com.indvd00m.vaadin.navigator.SubNavigator;
 import com.indvd00m.vaadin.navigator.api.ISubNavigator;
 import com.indvd00m.vaadin.navigator.api.view.ISubErrorContainer;
+import com.indvd00m.vaadin.navigator.api.view.ISubTitled;
 import com.indvd00m.vaadin.navigator.api.view.ISubView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -21,7 +22,7 @@ import com.vaadin.ui.UI;
 @Theme("valo")
 @Title("SubNavigator Add-on Demo")
 @SuppressWarnings("serial")
-public class SubNavigatorUI extends UI implements ISubErrorContainer {
+public class SubNavigatorUI extends UI implements ISubErrorContainer, ISubTitled {
 
 	ISubNavigator subNavigator;
 
@@ -40,6 +41,7 @@ public class SubNavigatorUI extends UI implements ISubErrorContainer {
 		subNavigator = new SubNavigator(this, this, demoView, true);
 		subNavigator.addView(this, infoView);
 		subNavigator.addView(this, demoView);
+		subNavigator.setEnabledSubTitles(true);
 	}
 
 	public ISubNavigator getSubNavigator() {
@@ -74,6 +76,11 @@ public class SubNavigatorUI extends UI implements ISubErrorContainer {
 	@Override
 	public ISubView createErrorView(String viewPath, String errorPath) {
 		return new ErrorView(viewPath, errorPath);
+	}
+
+	@Override
+	public String getRelativeTitle() {
+		return "SubNavigator Add-on";
 	}
 
 }

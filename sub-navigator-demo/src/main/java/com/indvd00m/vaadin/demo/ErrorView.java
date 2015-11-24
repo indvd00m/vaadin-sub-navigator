@@ -1,5 +1,6 @@
 package com.indvd00m.vaadin.demo;
 
+import com.indvd00m.vaadin.navigator.api.view.ISubTitled;
 import com.indvd00m.vaadin.navigator.api.view.ISubView;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.Alignment;
@@ -13,7 +14,7 @@ import com.vaadin.ui.VerticalLayout;
  *
  */
 @SuppressWarnings("serial")
-public class ErrorView extends VerticalLayout implements ISubView {
+public class ErrorView extends VerticalLayout implements ISubView, ISubTitled {
 
 	String viewPath;
 	String errorPath;
@@ -60,6 +61,11 @@ public class ErrorView extends VerticalLayout implements ISubView {
 		Link link = new Link("Home", new ExternalResource("./"));
 		vl.addComponent(link);
 		vl.setComponentAlignment(link, Alignment.MIDDLE_CENTER);
+	}
+
+	@Override
+	public String getRelativeTitle() {
+		return "Error page";
 	}
 
 }

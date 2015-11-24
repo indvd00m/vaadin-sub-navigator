@@ -13,6 +13,7 @@ import com.indvd00m.vaadin.navigator.api.ISubNavigator;
 import com.indvd00m.vaadin.navigator.api.event.IViewStatusChangeEvent;
 import com.indvd00m.vaadin.navigator.api.event.IViewStatusChangeListener;
 import com.indvd00m.vaadin.navigator.api.view.ISubContainer;
+import com.indvd00m.vaadin.navigator.api.view.ISubTitled;
 import com.indvd00m.vaadin.navigator.api.view.ISubView;
 import com.indvd00m.vaadin.navigator.api.view.ViewStatus;
 import com.vaadin.server.ExternalResource;
@@ -39,7 +40,7 @@ import com.vaadin.ui.VerticalLayout;
  *
  */
 @SuppressWarnings("serial")
-public class DemoContainer extends VerticalLayout implements ISubContainer, IViewStatusChangeListener, SelectedTabChangeListener {
+public class DemoContainer extends VerticalLayout implements ISubContainer, ISubTitled, IViewStatusChangeListener, SelectedTabChangeListener {
 
 	ISubNavigator subNavigator;
 
@@ -172,6 +173,11 @@ public class DemoContainer extends VerticalLayout implements ISubContainer, IVie
 	@Override
 	public void selectedTabChange(SelectedTabChangeEvent event) {
 		subNavigator.notifySelectedChangeDirected(this);
+	}
+
+	@Override
+	public String getRelativeTitle() {
+		return "Demo";
 	}
 
 }

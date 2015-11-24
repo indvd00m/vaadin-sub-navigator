@@ -13,6 +13,7 @@ import com.indvd00m.vaadin.navigator.api.event.IViewStatusChangeListener;
 import com.indvd00m.vaadin.navigator.api.view.ISubContainer;
 import com.indvd00m.vaadin.navigator.api.view.ISubDynamicContainer;
 import com.indvd00m.vaadin.navigator.api.view.ISubErrorContainer;
+import com.indvd00m.vaadin.navigator.api.view.ISubTitled;
 import com.indvd00m.vaadin.navigator.api.view.ISubView;
 import com.indvd00m.vaadin.navigator.api.view.ViewStatus;
 import com.indvd00m.vaadin.navigator.holder.ContainerHolder;
@@ -34,14 +35,17 @@ import com.vaadin.ui.UI;
  */
 public class SubNavigator implements ISubNavigator {
 
+	UI ui;
 	Navigator navigator;
 	ISubContainer root;
 	UriFragmentManager stateManager;
 	String currentNavigationState;
-	String delimiter = "/";
+	String pathDelimiter = "/";
+	String titleDelimiter = " - ";
 	Map<ISubView, ViewHolder> viewHolders = new HashMap<ISubView, ViewHolder>();
 	boolean processing = false;
 	boolean debug = false;
+	boolean enabledSubTitles = false;
 	ViewStatusLogger viewStatusLogger = new ViewStatusLogger(this);
 	ViewStatusDispatcher viewStatusDispatcher = new ViewStatusDispatcher();
 	SubViewDisplay viewDisplay = new SubViewDisplay(this);
@@ -51,7 +55,6 @@ public class SubNavigator implements ISubNavigator {
 	public static final String ERROR_PATH = "error";
 
 	// TODO: delete excess url's from browser history
-	// TODO: hierarchical page title
 	// TODO: deprecate double add of same view name
 
 	public SubNavigator(UI ui, ISubContainer root) {
@@ -63,6 +66,7 @@ public class SubNavigator implements ISubNavigator {
 	}
 
 	public SubNavigator(UI ui, ISubContainer root, IViewStatusChangeListener listener, boolean debug) {
+		this.ui = ui;
 		this.root = root;
 		this.debug = debug;
 		stateManager = new UriFragmentManager(ui.getPage());
@@ -345,15 +349,15 @@ public class SubNavigator implements ISubNavigator {
 	public String getDivergationPath(String path1, String path2) {
 		path1 = trimDelimiter(path1);
 		path2 = trimDelimiter(path2);
-		String[] pathElements1 = path1.split(quote(delimiter));
-		String[] pathElements2 = path2.split(quote(delimiter));
+		String[] pathElements1 = path1.split(quote(pathDelimiter));
+		String[] pathElements2 = path2.split(quote(pathDelimiter));
 		StringBuilder divergationNode = new StringBuilder("");
 		int minSize = Math.min(pathElements1.length, pathElements2.length);
 		for (int i = 0; i < minSize; i++) {
 			String node1 = pathElements1[i];
 			String node2 = pathElements2[i];
 			if (node1.equals(node2))
-				divergationNode.append(node1).append(delimiter);
+				divergationNode.append(node1).append(pathDelimiter);
 			else
 				break;
 		}
@@ -366,12 +370,12 @@ public class SubNavigator implements ISubNavigator {
 		List<String> nodes = new ArrayList<String>();
 		if (!isSubPath(path2, path1))
 			return nodes;
-		path1 = trimDelimiter(path1.replaceAll(quote(delimiter) + "+", delimiter));
-		path2 = trimDelimiter(path2.replaceAll(quote(delimiter) + "+", delimiter));
+		path1 = trimDelimiter(path1.replaceAll(quote(pathDelimiter) + "+", pathDelimiter));
+		path2 = trimDelimiter(path2.replaceAll(quote(pathDelimiter) + "+", pathDelimiter));
 		String remain = trimDelimiter(path2.replaceFirst(quote(path1), ""));
 		String lastNode = path1;
-		for (String node : remain.split(quote(delimiter))) {
-			String path = lastNode + delimiter + node;
+		for (String node : remain.split(quote(pathDelimiter))) {
+			String path = lastNode + pathDelimiter + node;
 			nodes.add(path);
 			lastNode = path;
 		}
@@ -443,7 +447,7 @@ public class SubNavigator implements ISubNavigator {
 		StringBuilder sb = new StringBuilder();
 		List<ISubView> pathList = getPathList(view);
 		for (ISubView pathElement : pathList) {
-			sb.append(getRelativePath(pathElement)).append(delimiter);
+			sb.append(getRelativePath(pathElement)).append(pathDelimiter);
 		}
 		String path = trimDelimiter(sb.toString());
 		return path;
@@ -596,7 +600,7 @@ public class SubNavigator implements ISubNavigator {
 				ISubDynamicContainer dynamicContainer = (ISubDynamicContainer) container;
 				DynamicContainerHolder dynamicContainerHolder = (DynamicContainerHolder) containerHolder;
 				String subPath = trimDelimiter(state.replaceFirst("\\Q" + path + "\\E", ""));
-				String viewPath = subPath.replaceAll(quote(delimiter) + "+.*", "");
+				String viewPath = subPath.replaceAll(quote(pathDelimiter) + "+.*", "");
 				ISubView subView = dynamicContainerHolder.createView(viewPath);
 				if (subView != null) {
 					if (!viewPath.equals(getRelativePath(subView)))
@@ -663,6 +667,31 @@ public class SubNavigator implements ISubNavigator {
 			}
 		}
 		currentNavigationState = selectedPath;
+
+		if (enabledSubTitles) {
+			ISubView selected = getSelected();
+			String title = getSubTitle(selected);
+			ui.getPage().setTitle(title);
+		}
+	}
+
+	@Override
+	public String getSubTitle(ISubView view) {
+		checkContains(view);
+		StringBuilder title = new StringBuilder();
+		List<ISubView> pathList = getPathList(view);
+		for (ISubView pathElement : pathList) {
+			if (pathElement instanceof ISubTitled) {
+				ISubTitled titled = (ISubTitled) pathElement;
+				String relativeTitle = titled.getRelativeTitle();
+				if (relativeTitle != null && !relativeTitle.isEmpty()) {
+					if (title.length() > 0)
+						title.append(titleDelimiter);
+					title.append(relativeTitle);
+				}
+			}
+		}
+		return title.toString();
 	}
 
 	protected void select(ISubView view) {
@@ -769,12 +798,12 @@ public class SubNavigator implements ISubNavigator {
 
 	@Override
 	public String trimDelimiterRight(String path) {
-		return path.replaceAll(quote(delimiter) + "*$", "");
+		return path.replaceAll(quote(pathDelimiter) + "*$", "");
 	}
 
 	@Override
 	public String trimDelimiterLeft(String path) {
-		return path.replaceAll("^" + quote(delimiter) + "*", "");
+		return path.replaceAll("^" + quote(pathDelimiter) + "*", "");
 	}
 
 	@Override
@@ -797,7 +826,7 @@ public class SubNavigator implements ISubNavigator {
 		String trimmedTest = trimDelimiter(testPath);
 		if (trimmedTest.isEmpty())
 			return true;
-		return trimmedSource.startsWith(trimmedTest + delimiter);
+		return trimmedSource.startsWith(trimmedTest + pathDelimiter);
 	}
 
 	@Override
@@ -867,8 +896,8 @@ public class SubNavigator implements ISubNavigator {
 	}
 
 	protected void checkRelativePath(String path) {
-		if (path.contains(delimiter))
-			throw new IllegalArgumentException(String.format("Relative path of view \"%s\" can't contain delimiter \"%s\"", path, delimiter));
+		if (path.contains(pathDelimiter))
+			throw new IllegalArgumentException(String.format("Relative path of view \"%s\" can't contain delimiter \"%s\"", path, pathDelimiter));
 	}
 
 	@Override
@@ -915,13 +944,23 @@ public class SubNavigator implements ISubNavigator {
 	}
 
 	@Override
-	public String getDelimiter() {
-		return delimiter;
+	public String getPathDelimiter() {
+		return pathDelimiter;
 	}
 
 	@Override
-	public void setDelimiter(String delimiter) {
-		this.delimiter = delimiter;
+	public void setPathDelimiter(String pathDelimiter) {
+		this.pathDelimiter = pathDelimiter;
+	}
+
+	@Override
+	public String getTitleDelimiter() {
+		return titleDelimiter;
+	}
+
+	@Override
+	public void setTitleDelimiter(String titleDelimiter) {
+		this.titleDelimiter = titleDelimiter;
 	}
 
 	@Override
@@ -932,13 +971,23 @@ public class SubNavigator implements ISubNavigator {
 	@Override
 	public void navigateTo(ISubContainer container, String relativePath) {
 		checkContains(container);
-		String path = getPath(container) + delimiter + trimDelimiter(relativePath);
+		String path = getPath(container) + pathDelimiter + trimDelimiter(relativePath);
 		navigateTo(path);
 	}
 
 	@Override
 	public String getState() {
 		return navigator.getState();
+	}
+
+	@Override
+	public boolean isEnabledSubTitles() {
+		return enabledSubTitles;
+	}
+
+	@Override
+	public void setEnabledSubTitles(boolean enableSubTitles) {
+		this.enabledSubTitles = enableSubTitles;
 	}
 
 }

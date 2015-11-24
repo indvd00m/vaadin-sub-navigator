@@ -1,5 +1,6 @@
 package com.indvd00m.vaadin.demo.views;
 
+import com.indvd00m.vaadin.navigator.api.view.ISubTitled;
 import com.indvd00m.vaadin.navigator.api.view.ISubView;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
@@ -10,7 +11,7 @@ import com.vaadin.ui.VerticalLayout;
  *
  */
 @SuppressWarnings("serial")
-public class SimpleView extends VerticalLayout implements ISubView {
+public class SimpleView extends VerticalLayout implements ISubView, ISubTitled {
 
 	String viewName;
 	String label;
@@ -41,6 +42,11 @@ public class SimpleView extends VerticalLayout implements ISubView {
 		setMargin(true);
 
 		addComponent(new Label(label));
+	}
+
+	@Override
+	public String getRelativeTitle() {
+		return label;
 	}
 
 }

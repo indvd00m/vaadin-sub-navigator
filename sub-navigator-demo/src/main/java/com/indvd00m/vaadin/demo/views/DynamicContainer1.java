@@ -3,6 +3,7 @@ package com.indvd00m.vaadin.demo.views;
 import com.indvd00m.vaadin.demo.SubNavigatorUI;
 import com.indvd00m.vaadin.navigator.api.ISubNavigator;
 import com.indvd00m.vaadin.navigator.api.view.ISubDynamicContainer;
+import com.indvd00m.vaadin.navigator.api.view.ISubTitled;
 import com.indvd00m.vaadin.navigator.api.view.ISubView;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -22,7 +23,7 @@ import com.vaadin.ui.Window.CloseListener;
  *
  */
 @SuppressWarnings("serial")
-public class DynamicContainer1 extends VerticalLayout implements ISubDynamicContainer {
+public class DynamicContainer1 extends VerticalLayout implements ISubDynamicContainer, ISubTitled {
 
 	protected ISubNavigator subNavigator;
 	String viewName;
@@ -132,6 +133,11 @@ public class DynamicContainer1 extends VerticalLayout implements ISubDynamicCont
 			}
 		});
 		addComponent(button);
+	}
+
+	@Override
+	public String getRelativeTitle() {
+		return viewName;
 	}
 
 }
