@@ -23,12 +23,11 @@ import com.vaadin.ui.Window.CloseListener;
  *
  */
 @SuppressWarnings("serial")
-public class DynamicContainer1 extends VerticalLayout implements ISubDynamicContainer, ISubTitled {
+public class DynamicContainer1 extends VerticalLayout implements ISubDynamicContainer, ISubTitled, CloseListener {
 
 	protected ISubNavigator subNavigator;
 	String viewName;
 	SimpleView selectedView;
-	boolean autoRemove = false;
 	DynamicContainer1 thisView = this;
 
 	Label info;
@@ -58,15 +57,12 @@ public class DynamicContainer1 extends VerticalLayout implements ISubDynamicCont
 
 	@Override
 	public void setSelectedView(ISubView view) {
-		if (selectedView != view) {
-			if (selectedView != null) {
-				autoRemove = true;
-				((Window) selectedView.getParent()).close();
-				selectedView = null;
-				autoRemove = false;
-			}
-		}
-		if (view instanceof SimpleView) {
+		if (view == null) {
+			Window window = (Window) selectedView.getParent();
+			window.removeCloseListener(this);
+			window.close();
+			selectedView = null;
+		} else {
 			selectedView = (SimpleView) view;
 			Window window = new Window();
 			window.setModal(true);
@@ -74,18 +70,15 @@ public class DynamicContainer1 extends VerticalLayout implements ISubDynamicCont
 			window.setHeight(500, Unit.PIXELS);
 			window.setContent(selectedView);
 			window.setCaption("Dynamically created window");
-			window.addCloseListener(new CloseListener() {
-
-				@Override
-				public void windowClose(CloseEvent e) {
-					selectedView = null;
-					if (!autoRemove)
-						subNavigator.notifySelectedChangeDirected(thisView);
-				}
-
-			});
+			window.addCloseListener(this);
 			getUI().addWindow(window);
 		}
+	}
+
+	@Override
+	public void windowClose(CloseEvent e) {
+		selectedView = null;
+		subNavigator.notifySelectedChangeDirected(thisView);
 	}
 
 	@Override
