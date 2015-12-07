@@ -54,8 +54,11 @@ public class SubNavigator implements ISubNavigator {
 
 	public static final String ERROR_PATH = "error";
 
-	// TODO: delete excess url's from browser history
-	// TODO: deprecate double add of same view name
+	// TODO redirecting
+	// TODO remove closeDynamicallyCreatedViews() and do it in rebuildDifferentPath()
+	// TODO hierarchical title direction
+	// TODO delete excess url's from browser history
+	// TODO deprecate double add of same view name
 
 	public SubNavigator(UI ui, ISubContainer root) {
 		this(ui, root, null);
@@ -947,7 +950,7 @@ public class SubNavigator implements ISubNavigator {
 
 	protected void checkContains(ISubView view) {
 		if (!contains(view))
-			throw new IllegalArgumentException("View is not added: \"" + getRelativePath(view) + "\"");
+			throw new IllegalArgumentException("View is not added: \"" + view.getRelativePath() + "\"");
 	}
 
 	protected String getRelativePath(ISubView view) {
