@@ -40,6 +40,7 @@ public class SubNavigator implements ISubNavigator {
 	ISubContainer root;
 	UriFragmentManager stateManager;
 	String currentNavigationState;
+	String redirectNavigationState;
 	String pathDelimiter = "/";
 	String titleDelimiter = " - ";
 	Map<ISubView, ViewHolder> viewHolders = new HashMap<ISubView, ViewHolder>();
@@ -54,7 +55,6 @@ public class SubNavigator implements ISubNavigator {
 
 	public static final String ERROR_PATH = "error";
 
-	// TODO redirecting
 	// TODO hierarchical title direction
 	// TODO delete excess url's from browser history
 	// TODO deprecate double add of same view name
@@ -233,23 +233,22 @@ public class SubNavigator implements ISubNavigator {
 	@Override
 	public void setSelected(ISubView view) {
 		checkContains(view);
+		navigateTo(getPath(view));
+	}
 
-		if (!processing) {
-			navigateTo(getPath(view));
+	protected void setSelectedInner(ISubView view) {
+		ViewHolder holder = getHolder(view);
+		if (!isSelected(view)) {
+			ISubContainer container = holder.getContainer();
+			deselect(container);
+			select(view);
+		}
+		ISubView selected = getSelected();
+		List<ISubView> selectedPathList = getPathList(selected);
+		if (selectedPathList.contains(view)) {
+			rebuild(selected);
 		} else {
-			ViewHolder holder = getHolder(view);
-			if (!isSelected(view)) {
-				ISubContainer container = holder.getContainer();
-				deselect(container);
-				select(view);
-			}
-			ISubView selected = getSelected();
-			List<ISubView> selectedPathList = getPathList(selected);
-			if (selectedPathList.contains(view)) {
-				rebuild(selected);
-			} else {
-				rebuild(view);
-			}
+			rebuild(view);
 		}
 	}
 
@@ -552,7 +551,7 @@ public class SubNavigator implements ISubNavigator {
 			if (holder != null) {
 				// selecting and building all hierarchy of view, which not selected and built yet
 				ISubView view = holder.getView();
-				setSelected(view);
+				setSelectedInner(view);
 			} else {
 				// view not found, trying to create error view
 				ISubView selected = getSelected();
@@ -566,6 +565,9 @@ public class SubNavigator implements ISubNavigator {
 				// view not created, throwing this exception
 				throw new RuntimeException(t);
 			}
+		} finally {
+			if (holder == null)
+				redirectNavigationState = null;
 		}
 
 		return holder;
@@ -577,7 +579,7 @@ public class SubNavigator implements ISubNavigator {
 		String path = getPath(container);
 
 		// first select and build container
-		setSelected(container);
+		setSelectedInner(container);
 
 		// check this container
 		if (equalsPath(state, path)) {
@@ -643,7 +645,7 @@ public class SubNavigator implements ISubNavigator {
 						throw new IllegalStateException(String.format("Name of created view \"%s\" must be \"%s\"", getRelativePath(subView), viewPath));
 					addView(dynamicContainer, subView);
 					getHolder(subView).setCreatedDynamically(true);
-					setSelected(subView);
+					setSelectedInner(subView);
 					// search in next level
 					return findView(containerHolder, state);
 				}
@@ -683,7 +685,7 @@ public class SubNavigator implements ISubNavigator {
 		ViewHolder errorHolder = getHolder(errorView);
 		errorHolder.setCreatedDynamically(true);
 		errorHolder.setErrorView(true);
-		setSelected(errorView);
+		setSelectedInner(errorView);
 
 		// return error view
 		return errorHolder;
@@ -718,7 +720,7 @@ public class SubNavigator implements ISubNavigator {
 		ViewHolder errorHolder = getHolder(errorView);
 		errorHolder.setCreatedDynamically(true);
 		errorHolder.setErrorView(true);
-		setSelected(errorView);
+		setSelectedInner(errorView);
 
 		// return error view
 		return errorHolder;
@@ -741,6 +743,12 @@ public class SubNavigator implements ISubNavigator {
 			ISubView selected = getSelected();
 			String title = getSubTitle(selected);
 			ui.getPage().setTitle(title);
+		}
+
+		if (redirectNavigationState != null && !equalsPath(currentNavigationState, redirectNavigationState)) {
+			String redirect = redirectNavigationState;
+			redirectNavigationState = null;
+			navigator.navigateTo(redirect);
 		}
 	}
 
@@ -1032,7 +1040,11 @@ public class SubNavigator implements ISubNavigator {
 
 	@Override
 	public void navigateTo(String path) {
-		navigator.navigateTo(path);
+		if (!processing) {
+			navigator.navigateTo(path);
+		} else {
+			redirectNavigationState = path;
+		}
 	}
 
 	@Override
