@@ -55,7 +55,6 @@ public class SubNavigator implements ISubNavigator {
 	public static final String ERROR_PATH = "error";
 
 	// TODO redirecting
-	// TODO remove closeDynamicallyCreatedViews() and do it in rebuildDifferentPath()
 	// TODO hierarchical title direction
 	// TODO delete excess url's from browser history
 	// TODO deprecate double add of same view name
