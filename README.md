@@ -19,8 +19,12 @@ Add dependency to your project:
 	<dependency>
 		<groupId>com.indvd00m.vaadin</groupId>
 		<artifactId>sub-navigator</artifactId>
-		<version>0.9.3.1</version>
+		<version>0.9.4</version>
 	</dependency>
+
+## Vaadin directory
+
+[SubNavigator](https://vaadin.com/directory#!addon/subnavigator)
 
 ## General information
 
@@ -30,7 +34,7 @@ SubNavigator - is a server-side addon for [Vaadin 7] (https://vaadin.com/) which
 
 Standard [Navigator] (https://vaadin.com/book/-/page/advanced.navigator.html) allows you to register for a specific View special URI Fragment and when the user accesses the required URL-address Navigator call `enter()` method from the corresponding View. All is well until there is a need to organize a sub-View. [Navigator] (https://vaadin.com/book/-/page/advanced.navigator.html) allows you to pass in `View.enter()` any parameters, ie, it can be easy to arrange two-level hierarchy, /main/view1 and /main/view2 for example. For large nesting it will require additional action.
 
-[SubNavigator](https://github.com/indvd00m/vaadin-sub-navigator/blob/master/sub-navigator-api/src/main/java/com/indvd00m/vaadin/navigator/api/ISubNavigator.java) allows you to explicitly specify a hierarchy of objects, and when the user moves from one address (URI Fragment'a, to be precise) to another SubNavigator will notify the appropriate objects on the need to clean/refresh the data in that prioritization as they are in the hierarchy.
+[SubNavigator](https://github.com/indvd00m/vaadin-sub-navigator/blob/master/sub-navigator-api/src/main/java/com/indvd00m/vaadin/navigator/api/ISubNavigator.java) allows you to explicitly specify a hierarchy of objects, and when the user moves from one address (URI Fragment, to be precise) to another SubNavigator will notify the appropriate objects on the need to clean/refresh the data in that prioritization as they are in the hierarchy.
 
 ### Description
 
@@ -50,7 +54,9 @@ public interface ISubContainer extends ISubView {
 	void deselectView(ISubView view);
 }
 ```
-As you can see, `ISubContainer` is a container, and generally can contain any other` ISubContainer`, or `ISubView`. Let's look in situation where you will need to display some data at address `#!/path1/path2/path3`. Both `path1` and `path2` is a `ISubContainer` implementation, `path3` can be either `ISubView` or `ISubContainer`. The method `getRelativePath()` of these objects determine their relative path `path1`, `path2`, `path3`. `path1` is a root element which contains other elements. For example, `path1` - it could be `Panel` element with nested `TabSheet`, `path2` - Tab, `path3` - `VerticalLayout`. An example of the implementation of the element at `path3`:
+As you can see, `ISubContainer` is a container, and generally can contain any other` ISubContainer`, or `ISubView`. Let's look in situation where you will need to display some data at address `#!/path1/path2/path3`. Both `path1` and `path2` is a `ISubContainer` implementation, `path3` can be either `ISubView` or `ISubContainer`. The method `getRelativePath()` of these objects determine their relative path `path1`, `path2`, `path3`. `path1` is a root element which contains other elements. For example, `path1` - it could be `Panel` element with nested `TabSheet`, `path2` - Tab, `path3` - `VerticalLayout`. 
+
+An example of the implementation of the element at `path3`:
 ```
 public class SubView3 extends VerticalLayout implements ISubView {
 
@@ -67,6 +73,42 @@ public class SubView3 extends VerticalLayout implements ISubView {
 	@Override
 	public void build() {
 		addComponent(new Label("Hello, world!"));
+	}
+
+}
+```
+This is example of implementation of the element at `path2`:
+```
+public class SimpleSubContainer2 extends VerticalLayout implements ISubContainer {
+
+	@Override
+	public String getRelativePath() {
+		return "path2";
+	}
+
+	@Override
+	public void clean() {
+		removeAllComponents();
+	}
+
+	@Override
+	public void build() {
+		((MyUI) getUI()).getSubNavigator().addView(this, new SubView3());
+	}
+
+	@Override
+	public ISubView getSelectedView() {
+		return (ISubView) getComponent(0);
+	}
+
+	@Override
+	public void setSelectedView(ISubView view) {
+		addComponent(view);
+	}
+
+	@Override
+	public void deselectView(ISubView view) {
+		removeComponent(view);
 	}
 
 }
@@ -114,6 +156,104 @@ public interface ISubDynamicContainer extends ISubContainer {
 ```
 This container can create a nested `ISubView` without special registration. In the previous example, if `path3` is `ISubDynamicContainer` in the path `#!/path1/path2/path3`, navigating to `#!/path1/path2/path3/123` will cause of calling method `createView("123")` in `path3` object. Dynamic containers can contain other dynamic containers.
 
+Example of dynamic container which can create windows:
+```
+public class DynamicContainer1 extends VerticalLayout implements ISubDynamicContainer, ISubTitled, CloseListener {
+
+	protected ISubNavigator subNavigator;
+	SimpleView selectedView;
+	DynamicContainer1 thisView = this;
+
+	Label info;
+	TextField id;
+	Button button;
+
+	@Override
+	public ISubView createView(String viewPathAndParameters) {
+		if (!viewPathAndParameters.matches("\\d+"))
+			return null;
+		SimpleView view = new SimpleView(viewPathAndParameters);
+		return view;
+	}
+
+	@Override
+	public ISubView getSelectedView() {
+		return selectedView;
+	}
+
+	@Override
+	public void setSelectedView(ISubView view) {
+		selectedView = (SimpleView) view;
+		Window window = new Window();
+		window.setModal(true);
+		window.setWidth(300, Unit.PIXELS);
+		window.setHeight(500, Unit.PIXELS);
+		window.setContent(selectedView);
+		window.setCaption("Dynamically created window");
+		window.addCloseListener(this);
+		getUI().addWindow(window);
+	}
+
+	@Override
+	public void deselectView(ISubView view) {
+		Window window = (Window) selectedView.getParent();
+		window.removeCloseListener(this);
+		window.close();
+		selectedView = null;
+	}
+
+	@Override
+	public void windowClose(CloseEvent e) {
+		selectedView = null;
+		subNavigator.notifySelectedChangeDirected(this);
+	}
+
+	@Override
+	public void clean() {
+		removeAllComponents();
+	}
+
+	@Override
+	public String getRelativePath() {
+		return "dynamic-container";
+	}
+
+	@Override
+	public void build() {
+		subNavigator = ((SubNavigatorUI) getUI()).getSubNavigator();
+
+		setSizeUndefined();
+		setSpacing(true);
+		setMargin(true);
+
+		info = new Label("This is dynamic container");
+		addComponent(info);
+
+		id = new TextField("Enter object id");
+		id.setValue("123");
+		id.setImmediate(true);
+		addComponent(id);
+
+		button = new Button("Click to open object");
+		button.addClickListener(new ClickListener() {
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				String sId = id.getValue().replaceAll("\\s+", "");
+				subNavigator.navigateTo(thisView, sId);
+			}
+		});
+		addComponent(button);
+	}
+
+	@Override
+	public String getRelativeTitle() {
+		return "Dynamic Container";
+	}
+
+}
+```
+
 ### Exceptions handling
 
 To catch errors you can implement [ISubErrorContainer](https://github.com/indvd00m/vaadin-sub-navigator/blob/master/sub-navigator-api/src/main/java/com/indvd00m/vaadin/navigator/api/view/ISubErrorContainer.java):
@@ -124,6 +264,19 @@ public interface ISubErrorContainer extends ISubContainer {
 }
 ```
 Method `createErrorView(String viewPath, String errorPath)` will be called if the `SubNavigator` could not find any data at the entered by user address. For example if the user enter a non-existent path `#!/path1/path9/path12` and` path1` implements `ISubErrorContainer`, SubNavigator call `createErrorView("error", "path1/path9/path12")` method on `path1` object. "error" is a relative path to display the created object `ISubView`, ie it will be located at the `#!/path1/error`.
+
+Showing view with error info:
+```
+	@Override
+	public ISubView createErrorView(String viewPath, String errorPath) {
+		return new ErrorView(viewPath, errorPath);
+	}
+
+	@Override
+	public ISubView createErrorView(String viewPath, Throwable t) {
+		return new ErrorView(viewPath, t);
+	}
+```
 
 ### Page title
 
@@ -198,6 +351,9 @@ To debug project and make code modifications on the fly in the server-side, righ
 
 ### Version 0.9.3.1
 - Allow redirect during the build process.
+
+### Version 0.9.4
+- Add addon building for deploy to vaadin directory.
 
 
 ## Roadmap
