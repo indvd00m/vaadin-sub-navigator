@@ -12,6 +12,7 @@
 		<module>sub-navigator-api</module>
 		<module>sub-navigator</module>
 		<module>sub-navigator-demo</module>
+		<module>sub-navigator-distribution</module>
 	</modules>
 
 </project>
