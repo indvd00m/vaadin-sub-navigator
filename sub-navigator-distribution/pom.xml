@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.indvd00m.vaadin</groupId>
 		<artifactId>sub-navigator-root</artifactId>
-		<version>0.9.3.2-SNAPSHOT</version>
+		<version>0.9.4</version>
 	</parent>
 	<artifactId>sub-navigator-distribution</artifactId>
 	<packaging>pom</packaging>
@@ -14,7 +14,7 @@
 		<Implementation-Version>${project.version}</Implementation-Version>
 		<!-- Must not change this because of the Directory -->
 		<Implementation-Title>SubNavigator</Implementation-Title>
-		<Implementation-Vendor>indvd00m</Implementation-Vendor>
+		<Implementation-Vendor>${project.groupId}</Implementation-Vendor>
 		<Vaadin-License-Title>Apache License 2.0</Vaadin-License-Title>
 		<Vaadin-Addon>sub-navigator-${project.version}.jar</Vaadin-Addon>
 		<Vaadin-Dependency>sub-navigator-api-${project.version}.jar</Vaadin-Dependency>
