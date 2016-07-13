@@ -1,6 +1,8 @@
 # SubNavigator Add-on for Vaadin 7
 
-SubNavigator is a server side add-on for Vaadin 7.
+SubNavigator - is a server-side addon which extends the capabilities of the standard object Navigator and allows easier to organize a hierarchical multilevel structure of vaadin-application.
+
+SubNavigator allows you to explicitly specify a hierarchy of objects, and when the user moves from one address (URI Fragment, to be precise) to another SubNavigator will notify the appropriate objects on the need to clean/refresh the data in that prioritization as they are in the hierarchy.
 
 ## Online demo
 
@@ -25,6 +27,12 @@ Add dependency to your project:
 ## Vaadin directory
 
 [SubNavigator](https://vaadin.com/directory#!addon/subnavigator)
+
+## Wiki
+
+[English](https://github.com/indvd00m/vaadin-sub-navigator/wiki/Description)
+
+[Russian](https://github.com/indvd00m/vaadin-sub-navigator/wiki/Description-in-Russian-(%D0%BE%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5-%D0%BD%D0%B0-%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%BE%D0%BC))
 
 ## General information
 
