@@ -21,7 +21,7 @@ Add dependency to your project:
 	<dependency>
 		<groupId>com.indvd00m.vaadin</groupId>
 		<artifactId>sub-navigator</artifactId>
-		<version>0.9.4</version>
+		<version>1.0.0</version>
 	</dependency>
 
 ## Vaadin directory
@@ -362,6 +362,9 @@ To debug project and make code modifications on the fly in the server-side, righ
 
 ### Version 0.9.4
 - Add addon building for deploy to vaadin directory.
+
+### Version 1.0.0
+- Addon well tested in real project.
 
 
 ## Roadmap
