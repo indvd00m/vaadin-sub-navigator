@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.indvd00m.vaadin</groupId>
 		<artifactId>sub-navigator-root</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>sub-navigator-distribution</artifactId>
 	<packaging>pom</packaging>
