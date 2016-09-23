@@ -21,7 +21,7 @@ Add dependency to your project:
 	<dependency>
 		<groupId>com.indvd00m.vaadin</groupId>
 		<artifactId>sub-navigator</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.1</version>
 	</dependency>
 
 ## Vaadin directory
@@ -365,6 +365,9 @@ To debug project and make code modifications on the fly in the server-side, righ
 
 ### Version 1.0.0
 - Addon well tested in real project.
+
+### Version 1.0.1
+- Addon well tested in Vaadin 7.7 branch.
 
 
 ## Roadmap
