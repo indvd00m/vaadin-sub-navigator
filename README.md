@@ -10,19 +10,21 @@ Try the add-on demo at <http://indvd00m.com/sub-navigator-demo>
 
 ## Using
 Add maven repository to your POM:
-
+```xml
 	<repository>
 		<id>indvd00m-github-repo</id>
 		<url>https://github.com/indvd00m/maven-repo/raw/master/repository</url>
 	</repository>
+```
 
 Add dependency to your project:
-
+```xml
 	<dependency>
 		<groupId>com.indvd00m.vaadin</groupId>
 		<artifactId>sub-navigator</artifactId>
 		<version>1.0.1</version>
 	</dependency>
+```
 
 ## Vaadin directory
 
@@ -52,14 +54,14 @@ Standard [Navigator] (https://vaadin.com/book/-/page/advanced.navigator.html) al
 
 Two main interfaces in [SubNavigator](https://github.com/indvd00m/vaadin-sub-navigator/blob/master/sub-navigator-api/src/main/java/com/indvd00m/vaadin/navigator/api/ISubNavigator.java) - is a [ISubView](https://github.com/indvd00m/vaadin-sub-navigator/blob/master/sub-navigator-api/src/main/java/com/indvd00m/vaadin/navigator/api/view/ISubView.java) and [ISubContainer](https://github.com/indvd00m/vaadin-sub-navigator/blob/master/sub-navigator-api/src/main/java/com/indvd00m/vaadin/navigator/api/view/ISubContainer.java).
 
-```
+```java
 public interface ISubView extends Component {
 	String getRelativePath();
 	void clean();
 	void build();
 }
 ```
-```
+```java
 public interface ISubContainer extends ISubView {
 	ISubView getSelectedView();
 	void setSelectedView(ISubView view);
@@ -69,7 +71,7 @@ public interface ISubContainer extends ISubView {
 As you can see, `ISubContainer` is a container, and generally can contain any other` ISubContainer`, or `ISubView`. Let's look in situation where you will need to display some data at address `#!/path1/path2/path3`. Both `path1` and `path2` is a `ISubContainer` implementation, `path3` can be either `ISubView` or `ISubContainer`. The method `getRelativePath()` of these objects determine their relative path `path1`, `path2`, `path3`. `path1` is a root element which contains other elements. For example, `path1` - it could be `Panel` element with nested `TabSheet`, `path2` - Tab, `path3` - `VerticalLayout`. 
 
 An example of the implementation of the element at `path3`:
-```
+```java
 public class SubView3 extends VerticalLayout implements ISubView {
 
 	@Override
@@ -90,7 +92,7 @@ public class SubView3 extends VerticalLayout implements ISubView {
 }
 ```
 This is example of implementation of the element at `path2`:
-```
+```java
 public class SimpleSubContainer2 extends VerticalLayout implements ISubContainer {
 
 	@Override
@@ -127,7 +129,7 @@ public class SimpleSubContainer2 extends VerticalLayout implements ISubContainer
 ```
 
 **Views registering.** To define the object tree in the application it can be used `addView(ISubContainer container, ISubView view)` method from [ISubNavigator](https://github.com/indvd00m/vaadin-sub-navigator/blob/master/sub-navigator-api/src/main/java/com/indvd00m/vaadin/navigator/api/ISubNavigator.java) interface:
-```
+```java
 // registering views
 ISubNavigator subNavigator = new SubNavigator(ui, path1View); // path1View - root view
 subNavigator.addView(path1View, path2View); // path2View contained in path1View
@@ -137,7 +139,7 @@ subNavigator.addView(path4View, path5View);
 ```
 
 **Situation 1** - a user for the first time passed the link to the application. For each object from the root to the last (`path1`,` path2`, `path3`) SubNavigator will invoke methods `build()` (for `ISubView`) and `setSelectedView(ISubView view)` (for `ISubContainer`), starting from the root:
-```
+```java
 // navigating to #!/path1/path2/path3
 path1View.build()
 path1View.setSelectedView(path2View)
@@ -147,7 +149,7 @@ path3View.build()
 ```
 
 **Situation 2** - user from the address `#!/path1/path2/path3` navigates to `#!/path1/path4/path5`. For objects with relative path `path3` and `path2` SubNavigator call methods `clean()` and `deselectView(ISubView view)`, then for objects with path `path4` and` path5` call methods `build()` and `setSelectedView(ISubView view ) `:
-```
+```java
 // navigating from #!/path1/path2/path3 to #!/path1/path4/path5
 path3View.clean()
 path2View.deselectView(path3View)
@@ -161,7 +163,7 @@ path5View.build()
 
 ### Dynamic containers
 In addition to the static method of view registration (`ISubNavigator.addView`), you can use  [ISubDynamicContainer](https://github.com/indvd00m/vaadin-sub-navigator/blob/master/sub-navigator-api/src/main/java/com/indvd00m/vaadin/navigator/api/view/ISubDynamicContainer.java):
-```
+```java
 public interface ISubDynamicContainer extends ISubContainer {
 	ISubView createView(String viewPathAndParameters);
 }
@@ -169,7 +171,7 @@ public interface ISubDynamicContainer extends ISubContainer {
 This container can create a nested `ISubView` without special registration. In the previous example, if `path3` is `ISubDynamicContainer` in the path `#!/path1/path2/path3`, navigating to `#!/path1/path2/path3/123` will cause of calling method `createView("123")` in `path3` object. Dynamic containers can contain other dynamic containers.
 
 Example of dynamic container which can create windows:
-```
+```java
 public class DynamicContainer1 extends VerticalLayout implements ISubDynamicContainer, ISubTitled, CloseListener {
 
 	protected ISubNavigator subNavigator;
@@ -269,7 +271,7 @@ public class DynamicContainer1 extends VerticalLayout implements ISubDynamicCont
 ### Exceptions handling
 
 To catch errors you can implement [ISubErrorContainer](https://github.com/indvd00m/vaadin-sub-navigator/blob/master/sub-navigator-api/src/main/java/com/indvd00m/vaadin/navigator/api/view/ISubErrorContainer.java):
-```
+```java
 public interface ISubErrorContainer extends ISubContainer {
 	ISubView createErrorView(String viewPath, String errorPath);
 	ISubView createErrorView(String viewPath, Throwable t);
@@ -278,7 +280,7 @@ public interface ISubErrorContainer extends ISubContainer {
 Method `createErrorView(String viewPath, String errorPath)` will be called if the `SubNavigator` could not find any data at the entered by user address. For example if the user enter a non-existent path `#!/path1/path9/path12` and` path1` implements `ISubErrorContainer`, SubNavigator call `createErrorView("error", "path1/path9/path12")` method on `path1` object. "error" is a relative path to display the created object `ISubView`, ie it will be located at the `#!/path1/error`.
 
 Showing view with error info:
-```
+```java
 	@Override
 	public ISubView createErrorView(String viewPath, String errorPath) {
 		return new ErrorView(viewPath, errorPath);
@@ -293,7 +295,7 @@ Showing view with error info:
 ### Page title
 
 To display hierarchical page title (eg "Page1 - Inner Page2 - Inner Page3") you can implement interface [ISubTitled](https://github.com/indvd00m/vaadin-sub-navigator/blob/master/sub-navigator-api/src/main/java/com/indvd00m/vaadin/navigator/api/view/ISubTitled.java):
-```
+```java
 public interface ISubTitled {
 	String getRelativeTitle();
 }
@@ -305,7 +307,7 @@ To enable this feature, use the `ISubNavigator.setEnabledSubTitles (true)` metho
 https://github.com/indvd00m/vaadin-sub-navigator/releases
 
 ## Building and running demo
-```
+```bash
 git clone https://github.com/indvd00m/vaadin-sub-navigator/
 cd vaadin-sub-navigator
 mvn clean install
